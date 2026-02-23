@@ -9,10 +9,17 @@
 import { IDL } from '@icp-sdk/core/candid';
 
 export const Time = IDL.Int;
+export const SyllabusChapter = IDL.Record({
+  'id' : IDL.Text,
+  'title' : IDL.Text,
+  'subject' : IDL.Text,
+  'notes' : IDL.Opt(IDL.Text),
+});
 export const StudySession = IDL.Record({
   'startTime' : Time,
   'endTime' : Time,
   'completed' : IDL.Bool,
+  'chapterId' : IDL.Opt(IDL.Text),
 });
 export const UserSettings = IDL.Record({
   'workDuration' : IDL.Int,
@@ -20,7 +27,15 @@ export const UserSettings = IDL.Record({
 });
 
 export const idlService = IDL.Service({
+  'createChapter' : IDL.Func([IDL.Text, IDL.Text, IDL.Opt(IDL.Text)], [], []),
+  'deleteChapter' : IDL.Func([IDL.Text], [], []),
+  'editChapter' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
+      [],
+      [],
+    ),
   'endSession' : IDL.Func([Time], [], []),
+  'getChapters' : IDL.Func([], [IDL.Vec(SyllabusChapter)], ['query']),
   'getCurrentStreak' : IDL.Func([], [IDL.Int], ['query']),
   'getSessions' : IDL.Func([], [IDL.Vec(StudySession)], ['query']),
   'getSettings' : IDL.Func([], [UserSettings], ['query']),
@@ -37,7 +52,7 @@ export const idlService = IDL.Service({
     ),
   'login' : IDL.Func([], [], []),
   'logout' : IDL.Func([], [], []),
-  'startSession' : IDL.Func([Time], [], []),
+  'startSession' : IDL.Func([Time, IDL.Opt(IDL.Text)], [], []),
   'updateSettings' : IDL.Func([IDL.Int, IDL.Int], [], []),
 });
 
@@ -45,10 +60,17 @@ export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
   const Time = IDL.Int;
+  const SyllabusChapter = IDL.Record({
+    'id' : IDL.Text,
+    'title' : IDL.Text,
+    'subject' : IDL.Text,
+    'notes' : IDL.Opt(IDL.Text),
+  });
   const StudySession = IDL.Record({
     'startTime' : Time,
     'endTime' : Time,
     'completed' : IDL.Bool,
+    'chapterId' : IDL.Opt(IDL.Text),
   });
   const UserSettings = IDL.Record({
     'workDuration' : IDL.Int,
@@ -56,7 +78,15 @@ export const idlFactory = ({ IDL }) => {
   });
   
   return IDL.Service({
+    'createChapter' : IDL.Func([IDL.Text, IDL.Text, IDL.Opt(IDL.Text)], [], []),
+    'deleteChapter' : IDL.Func([IDL.Text], [], []),
+    'editChapter' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
+        [],
+        [],
+      ),
     'endSession' : IDL.Func([Time], [], []),
+    'getChapters' : IDL.Func([], [IDL.Vec(SyllabusChapter)], ['query']),
     'getCurrentStreak' : IDL.Func([], [IDL.Int], ['query']),
     'getSessions' : IDL.Func([], [IDL.Vec(StudySession)], ['query']),
     'getSettings' : IDL.Func([], [UserSettings], ['query']),
@@ -73,7 +103,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'login' : IDL.Func([], [], []),
     'logout' : IDL.Func([], [], []),
-    'startSession' : IDL.Func([Time], [], []),
+    'startSession' : IDL.Func([Time, IDL.Opt(IDL.Text)], [], []),
     'updateSettings' : IDL.Func([IDL.Int, IDL.Int], [], []),
   });
 };

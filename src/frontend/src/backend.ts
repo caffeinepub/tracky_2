@@ -93,14 +93,25 @@ export interface UserSettings {
     workDuration: bigint;
     breakDuration: bigint;
 }
+export interface SyllabusChapter {
+    id: string;
+    title: string;
+    subject: string;
+    notes?: string;
+}
+export type Time = bigint;
 export interface StudySession {
     startTime: Time;
     endTime: Time;
     completed: boolean;
+    chapterId?: string;
 }
-export type Time = bigint;
 export interface backendInterface {
+    createChapter(title: string, subject: string, notes: string | null): Promise<void>;
+    deleteChapter(chapterId: string): Promise<void>;
+    editChapter(chapterId: string, newTitle: string, newSubject: string, newNotes: string | null): Promise<void>;
     endSession(endTime: Time): Promise<void>;
+    getChapters(): Promise<Array<SyllabusChapter>>;
     getCurrentStreak(): Promise<bigint>;
     getSessions(): Promise<Array<StudySession>>;
     getSettings(): Promise<UserSettings>;
@@ -111,11 +122,54 @@ export interface backendInterface {
     }>;
     login(): Promise<void>;
     logout(): Promise<void>;
-    startSession(startTime: Time): Promise<void>;
+    startSession(startTime: Time, chapterId: string | null): Promise<void>;
     updateSettings(workDuration: bigint, breakDuration: bigint): Promise<void>;
 }
+import type { StudySession as _StudySession, SyllabusChapter as _SyllabusChapter, Time as _Time } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
+    async createChapter(arg0: string, arg1: string, arg2: string | null): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.createChapter(arg0, arg1, to_candid_opt_n1(this._uploadFile, this._downloadFile, arg2));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.createChapter(arg0, arg1, to_candid_opt_n1(this._uploadFile, this._downloadFile, arg2));
+            return result;
+        }
+    }
+    async deleteChapter(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteChapter(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteChapter(arg0);
+            return result;
+        }
+    }
+    async editChapter(arg0: string, arg1: string, arg2: string, arg3: string | null): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.editChapter(arg0, arg1, arg2, to_candid_opt_n1(this._uploadFile, this._downloadFile, arg3));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.editChapter(arg0, arg1, arg2, to_candid_opt_n1(this._uploadFile, this._downloadFile, arg3));
+            return result;
+        }
+    }
     async endSession(arg0: Time): Promise<void> {
         if (this.processError) {
             try {
@@ -128,6 +182,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.endSession(arg0);
             return result;
+        }
+    }
+    async getChapters(): Promise<Array<SyllabusChapter>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getChapters();
+                return from_candid_vec_n2(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getChapters();
+            return from_candid_vec_n2(this._uploadFile, this._downloadFile, result);
         }
     }
     async getCurrentStreak(): Promise<bigint> {
@@ -148,14 +216,14 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getSessions();
-                return result;
+                return from_candid_vec_n6(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getSessions();
-            return result;
+            return from_candid_vec_n6(this._uploadFile, this._downloadFile, result);
         }
     }
     async getSettings(): Promise<UserSettings> {
@@ -218,17 +286,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async startSession(arg0: Time): Promise<void> {
+    async startSession(arg0: Time, arg1: string | null): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.startSession(arg0);
+                const result = await this.actor.startSession(arg0, to_candid_opt_n1(this._uploadFile, this._downloadFile, arg1));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.startSession(arg0);
+            const result = await this.actor.startSession(arg0, to_candid_opt_n1(this._uploadFile, this._downloadFile, arg1));
             return result;
         }
     }
@@ -246,6 +314,60 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+}
+function from_candid_StudySession_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _StudySession): StudySession {
+    return from_candid_record_n8(_uploadFile, _downloadFile, value);
+}
+function from_candid_SyllabusChapter_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _SyllabusChapter): SyllabusChapter {
+    return from_candid_record_n4(_uploadFile, _downloadFile, value);
+}
+function from_candid_opt_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_record_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    id: string;
+    title: string;
+    subject: string;
+    notes: [] | [string];
+}): {
+    id: string;
+    title: string;
+    subject: string;
+    notes?: string;
+} {
+    return {
+        id: value.id,
+        title: value.title,
+        subject: value.subject,
+        notes: record_opt_to_undefined(from_candid_opt_n5(_uploadFile, _downloadFile, value.notes))
+    };
+}
+function from_candid_record_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    startTime: _Time;
+    endTime: _Time;
+    completed: boolean;
+    chapterId: [] | [string];
+}): {
+    startTime: Time;
+    endTime: Time;
+    completed: boolean;
+    chapterId?: string;
+} {
+    return {
+        startTime: value.startTime,
+        endTime: value.endTime,
+        completed: value.completed,
+        chapterId: record_opt_to_undefined(from_candid_opt_n5(_uploadFile, _downloadFile, value.chapterId))
+    };
+}
+function from_candid_vec_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_SyllabusChapter>): Array<SyllabusChapter> {
+    return value.map((x)=>from_candid_SyllabusChapter_n3(_uploadFile, _downloadFile, x));
+}
+function from_candid_vec_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_StudySession>): Array<StudySession> {
+    return value.map((x)=>from_candid_StudySession_n7(_uploadFile, _downloadFile, x));
+}
+function to_candid_opt_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: string | null): [] | [string] {
+    return value === null ? candid_none() : candid_some(value);
 }
 export interface CreateActorOptions {
     agent?: Agent;

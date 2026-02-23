@@ -1,35 +1,51 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T21:45:39.620Z",
-  "summary": "The implementation successfully addresses all five requirements (REQ-4 through REQ-8). Study streak tracking, session history, custom timer settings, motivational quotes, and statistics dashboard are all implemented with backend storage and frontend UI components. All features integrate properly with the existing authentication system and maintain the warm earthy color theme.",
-  "missing_requirements": [
+  "generatedAt": "2026-02-23T21:53:42.987Z",
+  "summary": "The implementation successfully addresses all seven requirements (REQ-9 through REQ-15) for adding syllabus chapter tracking functionality. The backend data model, association logic, frontend components, chapter selection in the timer, session history filtering, chapter statistics, and edit/delete operations are all implemented with proper validation, UI consistency, and stable storage support.",
+  "missing_requirements": [],
+  "hallucinated_features": [
     {
-      "id": "REQ-5",
-      "requirement": "Session history is filterable by date range or session type",
-      "reason": "The SessionHistory component declares a filter state variable but does not implement any UI controls or logic to actually filter sessions by date range or session type. The filter is initialized to 'all' but never modified or applied.",
+      "description": "Migration module (backend/migration.mo) for handling data migration from old to new schema",
+      "reason": "The BuildRequest does not mention implementing a migration system or upgrading existing data structures. While this supports the constraint about stable storage, the explicit migration logic was not requested.",
+      "evidence": [
+        "backend/migration.mo"
+      ]
+    },
+    {
+      "description": "Notes field displayed in chapter cards with truncation",
+      "reason": "While REQ-9 and REQ-15 mention optional notes fields in the data model and edit functionality, the BuildRequest does not specify displaying notes in the chapter list UI. The implementation shows notes display in ChapterManager.tsx.",
+      "evidence": [
+        "frontend/src/components/ChapterManager.tsx"
+      ]
+    },
+    {
+      "description": "Gradient-styled cards for chapter statistics",
+      "reason": "REQ-14 requires chapter statistics with visual breakdown using charts, but the implementation adds gradient styling to chapter stat cards which goes beyond the basic visualization requirement.",
+      "evidence": [
+        "frontend/src/components/StatisticsDashboard.tsx"
+      ]
+    },
+    {
+      "description": "Unassociated filter option in session history",
+      "reason": "REQ-13 requires filtering sessions by chapter and indicating unassociated sessions, but adding a specific 'Unassociated' filter option in the dropdown was not explicitly requested.",
       "evidence": [
         "frontend/src/components/SessionHistory.tsx"
       ]
     }
   ],
-  "hallucinated_features": [],
-  "confidence": 0.92,
+  "confidence": 0.85,
   "changed_files": [
     "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
     "frontend/src/App.tsx",
-    "frontend/src/components/DailyQuote.tsx",
+    "frontend/src/components/ChapterManager.tsx",
     "frontend/src/components/PomodoroTimer.tsx",
     "frontend/src/components/SessionHistory.tsx",
     "frontend/src/components/SessionHistoryItem.tsx",
     "frontend/src/components/StatisticsDashboard.tsx",
-    "frontend/src/components/StreakDisplay.tsx",
     "frontend/src/components/StudyChart.tsx",
-    "frontend/src/components/TimerSettings.tsx",
-    "frontend/src/data/motivationalQuotes.ts",
-    "frontend/src/hooks/useAuth.ts",
-    "frontend/src/hooks/useDailyQuote.ts",
     "frontend/src/hooks/usePomodoro.ts",
     "frontend/src/hooks/useQueries.ts",
     "project_state.json"

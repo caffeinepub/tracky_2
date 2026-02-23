@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import type { StudySession, SyllabusChapter } from '../backend';
 
 interface StudyChartProps {
   statistics?: {
@@ -9,9 +10,19 @@ interface StudyChartProps {
     weeklyTrends: Array<[bigint, bigint]>;
     sessionDistribution: Array<[bigint, bigint]>;
   };
+  sessions?: StudySession[];
+  chapters?: SyllabusChapter[];
 }
 
-export function StudyChart({ statistics }: StudyChartProps) {
+const CHART_COLORS = [
+  'oklch(var(--chart-1))',
+  'oklch(var(--chart-2))',
+  'oklch(var(--chart-3))',
+  'oklch(var(--chart-4))',
+  'oklch(var(--chart-5))',
+];
+
+export function StudyChart({ statistics, sessions, chapters }: StudyChartProps) {
   const [period, setPeriod] = useState<'daily' | 'weekly'>('daily');
 
   // Transform data for charts
@@ -30,6 +41,40 @@ export function StudyChart({ statistics }: StudyChartProps) {
     sessions: Number(count),
   })) || [];
 
+  // Calculate chapter distribution
+  const chapterTimeData: { name: string; value: number }[] = [];
+  const chapterSessionData: { name: string; value: number }[] = [];
+  
+  if (sessions && chapters && chapters.length > 0) {
+    const chapterStats = new Map<string, { time: number; count: number }>();
+    
+    sessions.filter((s) => s.completed && s.chapterId).forEach((session) => {
+      const chapterId = session.chapterId!;
+      const duration = Number(session.endTime) - Number(session.startTime);
+      const minutes = duration / (1000 * 1000 * 1000 * 60);
+      
+      const existing = chapterStats.get(chapterId) || { time: 0, count: 0 };
+      chapterStats.set(chapterId, {
+        time: existing.time + minutes,
+        count: existing.count + 1,
+      });
+    });
+
+    chapterStats.forEach((stats, chapterId) => {
+      const chapter = chapters.find((c) => c.id === chapterId);
+      if (chapter) {
+        chapterTimeData.push({
+          name: chapter.title,
+          value: Math.floor(stats.time),
+        });
+        chapterSessionData.push({
+          name: chapter.title,
+          value: stats.count,
+        });
+      }
+    });
+  }
+
   if (!statistics || (dailyData.length === 0 && weeklyData.length === 0 && distributionData.length === 0)) {
     return (
       <div className="text-center py-12 space-y-2">
@@ -44,9 +89,10 @@ export function StudyChart({ statistics }: StudyChartProps) {
   return (
     <div className="space-y-4">
       <Tabs defaultValue="time" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="time">Study Time</TabsTrigger>
           <TabsTrigger value="distribution">Session Distribution</TabsTrigger>
+          <TabsTrigger value="chapters">By Chapter</TabsTrigger>
         </TabsList>
         
         <TabsContent value="time" className="space-y-4">
@@ -121,6 +167,82 @@ export function StudyChart({ statistics }: StudyChartProps) {
               />
             </BarChart>
           </ResponsiveContainer>
+        </TabsContent>
+
+        <TabsContent value="chapters" className="space-y-4">
+          {chapterTimeData.length > 0 ? (
+            <>
+              <div>
+                <h4 className="text-sm font-medium text-muted-foreground mb-3">Study Time by Chapter</h4>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={chapterTimeData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="oklch(var(--border))" />
+                    <XAxis 
+                      dataKey="name" 
+                      stroke="oklch(var(--muted-foreground))"
+                      fontSize={11}
+                      angle={-45}
+                      textAnchor="end"
+                      height={80}
+                    />
+                    <YAxis 
+                      stroke="oklch(var(--muted-foreground))"
+                      fontSize={12}
+                      label={{ value: 'Minutes', angle: -90, position: 'insideLeft' }}
+                    />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: 'oklch(var(--card))',
+                        border: '1px solid oklch(var(--border))',
+                        borderRadius: '8px',
+                      }}
+                    />
+                    <Bar dataKey="value" radius={[8, 8, 0, 0]}>
+                      {chapterTimeData.map((_, index) => (
+                        <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-medium text-muted-foreground mb-3">Session Count by Chapter</h4>
+                <ResponsiveContainer width="100%" height={250}>
+                  <PieChart>
+                    <Pie
+                      data={chapterSessionData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={80}
+                      fill="oklch(var(--primary))"
+                      dataKey="value"
+                    >
+                      {chapterSessionData.map((_, index) => (
+                        <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: 'oklch(var(--card))',
+                        border: '1px solid oklch(var(--border))',
+                        borderRadius: '8px',
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-12 space-y-2">
+              <p className="text-muted-foreground">No chapter data available</p>
+              <p className="text-sm text-muted-foreground">
+                Complete study sessions with chapters assigned to see statistics
+              </p>
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>

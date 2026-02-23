@@ -4,6 +4,7 @@ import { PomodoroTimer } from './components/PomodoroTimer';
 import { DailyQuote } from './components/DailyQuote';
 import { StreakDisplay } from './components/StreakDisplay';
 import { TimerSettings } from './components/TimerSettings';
+import { ChapterManager } from './components/ChapterManager';
 import { SessionHistory } from './components/SessionHistory';
 import { StatisticsDashboard } from './components/StatisticsDashboard';
 import { Loader2, Heart } from 'lucide-react';
@@ -44,6 +45,8 @@ function App() {
                 <StreakDisplay />
               </div>
             </div>
+
+            <ChapterManager />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <SessionHistory />

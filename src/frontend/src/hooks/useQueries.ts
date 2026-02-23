@@ -1,6 +1,6 @@
 import { useActor } from './useActor';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type { StudySession, UserSettings } from '../backend';
+import type { StudySession, UserSettings, SyllabusChapter } from '../backend';
 
 // Streak tracking
 export function useGetCurrentStreak() {
@@ -65,9 +65,9 @@ export function useStartSession() {
   const { actor } = useActor();
 
   return useMutation({
-    mutationFn: async (startTime: bigint) => {
+    mutationFn: async ({ startTime, chapterId }: { startTime: bigint; chapterId: string | null }) => {
       if (!actor) throw new Error('Actor not initialized');
-      await actor.startSession(startTime);
+      await actor.startSession(startTime, chapterId);
     },
   });
 }
@@ -100,5 +100,66 @@ export function useGetStatistics() {
       return actor.getStatistics();
     },
     enabled: !!actor && !isFetching,
+  });
+}
+
+// Chapters
+export function useChapters() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<SyllabusChapter[]>({
+    queryKey: ['chapters'],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getChapters();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useCreateChapter() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ title, subject, notes }: { title: string; subject: string; notes?: string }) => {
+      if (!actor) throw new Error('Actor not initialized');
+      await actor.createChapter(title, subject, notes || null);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['chapters'] });
+    },
+  });
+}
+
+export function useEditChapter() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ chapterId, title, subject, notes }: { chapterId: string; title: string; subject: string; notes?: string }) => {
+      if (!actor) throw new Error('Actor not initialized');
+      await actor.editChapter(chapterId, title, subject, notes || null);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['chapters'] });
+      queryClient.invalidateQueries({ queryKey: ['sessions'] });
+    },
+  });
+}
+
+export function useDeleteChapter() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (chapterId: string) => {
+      if (!actor) throw new Error('Actor not initialized');
+      await actor.deleteChapter(chapterId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['chapters'] });
+      queryClient.invalidateQueries({ queryKey: ['sessions'] });
+    },
   });
 }

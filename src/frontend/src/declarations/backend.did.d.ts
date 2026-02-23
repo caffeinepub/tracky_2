@@ -14,6 +14,13 @@ export interface StudySession {
   'startTime' : Time,
   'endTime' : Time,
   'completed' : boolean,
+  'chapterId' : [] | [string],
+}
+export interface SyllabusChapter {
+  'id' : string,
+  'title' : string,
+  'subject' : string,
+  'notes' : [] | [string],
 }
 export type Time = bigint;
 export interface UserSettings {
@@ -21,7 +28,14 @@ export interface UserSettings {
   'breakDuration' : bigint,
 }
 export interface _SERVICE {
+  'createChapter' : ActorMethod<[string, string, [] | [string]], undefined>,
+  'deleteChapter' : ActorMethod<[string], undefined>,
+  'editChapter' : ActorMethod<
+    [string, string, string, [] | [string]],
+    undefined
+  >,
   'endSession' : ActorMethod<[Time], undefined>,
+  'getChapters' : ActorMethod<[], Array<SyllabusChapter>>,
   'getCurrentStreak' : ActorMethod<[], bigint>,
   'getSessions' : ActorMethod<[], Array<StudySession>>,
   'getSettings' : ActorMethod<[], UserSettings>,
@@ -35,7 +49,7 @@ export interface _SERVICE {
   >,
   'login' : ActorMethod<[], undefined>,
   'logout' : ActorMethod<[], undefined>,
-  'startSession' : ActorMethod<[Time], undefined>,
+  'startSession' : ActorMethod<[Time, [] | [string]], undefined>,
   'updateSettings' : ActorMethod<[bigint, bigint], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;

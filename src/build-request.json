@@ -1,126 +1,156 @@
 {
   "kind": "build_request",
-  "title": "Add study streak tracking, session history, custom timer settings, motivational quotes, and statistics dashboard",
-  "projectName": "Tracky Study Timer",
+  "title": "Add syllabus chapter tracker to organize study sessions by subject",
+  "projectName": "Tracky",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-4",
-      "text": "Implement study streak tracking that counts consecutive days with at least one completed study session, storing streak data per user in the backend and displaying current streak count in the UI",
-      "target": "both",
+      "id": "REQ-9",
+      "text": "Create a backend data model for syllabus chapters that includes chapter title, subject/topic, and optional notes or description fields, storing chapters per user with unique identifiers",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-user-yes"
         ],
         "quotes": [
-          "Study Streak Tracking - Track consecutive days of study sessions"
+          "syllabus chapter tracker to organize study sessions by subject"
         ]
       },
       "acceptanceCriteria": [
-        "Backend stores streak count and last session date per user Principal",
-        "Streak increments when user completes a session on a new calendar day",
-        "Streak resets to 1 if more than one day has passed since last session",
-        "Frontend displays current streak count prominently in the UI",
-        "Streak persists across browser sessions and app upgrades"
+        "Chapter data structure includes id, userId, title, subject, and optional notes fields",
+        "Backend provides functions to create, read, update, and delete chapters",
+        "Chapters are persisted in stable storage and survive canister upgrades",
+        "Each user can only access their own chapters"
       ]
     },
     {
-      "id": "REQ-5",
-      "text": "Create session history feature that records all completed study sessions with timestamps and durations, storing them in the backend and displaying them in a chronological list in the frontend",
-      "target": "both",
+      "id": "REQ-10",
+      "text": "Add the ability to associate study sessions with specific syllabus chapters by storing a chapter reference in each session record",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-user-yes"
         ],
         "quotes": [
-          "Session History - See past study sessions and total time studied"
+          "organize study sessions by subject"
         ]
       },
       "acceptanceCriteria": [
-        "Backend stores each completed session with timestamp, duration, and session type (work/break)",
-        "Frontend displays sessions in reverse chronological order (newest first)",
-        "Each session entry shows date, time, duration, and type",
-        "Display total time studied across all sessions",
-        "Session history is filterable by date range or session type"
+        "Study session records include an optional chapterId field",
+        "Backend validates that referenced chapters exist and belong to the user",
+        "Session history queries can filter by chapter",
+        "Statistics can be computed per chapter"
       ]
     },
     {
-      "id": "REQ-6",
-      "text": "Add custom timer settings that allow users to adjust work session and break durations, storing preferences per user in the backend and providing a settings UI in the frontend",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "Custom Timer Settings - Let users adjust work/break durations"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend stores work duration and break duration preferences per user",
-        "Frontend provides settings interface with input controls for work and break durations",
-        "Duration ranges are validated (minimum 1 minute, maximum 90 minutes)",
-        "Custom durations apply to new timer sessions immediately after saving",
-        "Settings persist across browser sessions",
-        "Default values remain 25 minutes for work and 5 minutes for breaks"
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Display daily motivational quotes that rotate and appear in the UI, with a curated collection of study-focused inspirational messages",
+      "id": "REQ-11",
+      "text": "Create a frontend component for managing syllabus chapters that displays a list of all chapters with their subjects and allows users to add new chapters with title and subject fields",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-user-yes"
         ],
         "quotes": [
-          "Daily Motivational Quotes - Display inspirational quotes"
+          "syllabus chapter tracker"
         ]
       },
       "acceptanceCriteria": [
-        "Frontend maintains a collection of at least 30 study-focused motivational quotes",
-        "Display one random quote per day that remains consistent throughout the day",
-        "Quote appears in a dedicated section of the UI with appropriate styling",
-        "Quote changes at midnight local time",
-        "Quote display is visible to authenticated users"
+        "Component displays all user chapters in a card-based layout consistent with existing UI design",
+        "Add chapter form includes title and subject input fields with validation",
+        "Users can create new chapters and see them appear in the list immediately",
+        "Component uses warm earthy color palette matching existing theme"
       ]
     },
     {
-      "id": "REQ-8",
-      "text": "Create a study statistics dashboard with charts visualizing study patterns including daily study time, weekly trends, and session distribution over time periods",
-      "target": "both",
+      "id": "REQ-12",
+      "text": "Add chapter selection functionality to the Pomodoro timer so users can optionally associate their current study session with a specific chapter before starting the timer",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-user-yes"
         ],
         "quotes": [
-          "Study Statistics Dashboard - Charts showing study patterns"
+          "organize study sessions by subject"
         ]
       },
       "acceptanceCriteria": [
-        "Backend provides aggregate statistics endpoints for daily, weekly, and monthly data",
-        "Frontend displays interactive charts showing study time trends over selectable periods",
-        "Dashboard shows total study time, average session length, and most productive time of day",
-        "Charts update in real-time as new sessions are completed",
-        "Dashboard is accessible via navigation and displays data only for authenticated users",
-        "Use a charting library compatible with React and the existing tech stack"
+        "Timer component includes a chapter selector dropdown or similar UI element",
+        "Users can choose a chapter or leave it unassociated",
+        "Selected chapter is passed to backend when starting a study session",
+        "Chapter selection is cleared after session completion"
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "text": "Enhance the session history view to display the associated chapter name for each study session, with the ability to filter sessions by chapter",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-yes"
+        ],
+        "quotes": [
+          "organize study sessions by subject"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Each session item shows the chapter title and subject if associated",
+        "Users can filter the session history list by selecting a specific chapter",
+        "Filter UI matches existing design patterns and color scheme",
+        "Unassociated sessions are clearly indicated"
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "text": "Add chapter-level statistics to the statistics dashboard showing total study time and session count per chapter with visual breakdown",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-yes"
+        ],
+        "quotes": [
+          "organize study sessions by subject"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Dashboard includes a new section for chapter statistics",
+        "Shows study time distribution across chapters using charts",
+        "Displays session count per chapter",
+        "Integrates with existing Recharts visualization patterns"
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "text": "Implement edit and delete functionality for syllabus chapters with confirmation for deletion to prevent accidental data loss",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-user-yes"
+        ],
+        "quotes": [
+          "syllabus chapter tracker to organize study sessions by subject"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users can edit chapter title, subject, and notes after creation",
+        "Delete action shows confirmation dialog",
+        "Deleting a chapter does not delete associated sessions but marks them as unassociated",
+        "Backend enforces ownership validation for edit and delete operations"
       ]
     }
   ],
   "constraints": [
-    "Maintain existing Pomodoro timer functionality without breaking changes",
-    "Preserve Internet Identity authentication flow",
-    "Keep warm earthy color theme and minimal UI design consistent",
-    "Store all user data in the single-actor backend architecture",
-    "Session history must be queryable efficiently even with hundreds of sessions per user"
+    "Maintain single-actor architecture in backend/main.mo",
+    "Use existing warm earthy color palette (terracotta, sage green, cream) for all new UI components",
+    "Follow existing card-based layout patterns",
+    "Do not modify immutable frontend paths: useInternetIdentity.ts, useInternetIdentity.tsx, useActor.ts, main.tsx, components/ui",
+    "New backend state must support stable storage for canister upgrades"
   ],
   "nonGoals": [
-    "Social features or sharing statistics with other users",
-    "Export functionality for session data",
-    "Mobile app version",
-    "Browser notifications for timer completion",
-    "Integration with external calendar or productivity tools",
-    "Multi-user collaborative study sessions"
+    "Multi-subject filtering (only single chapter filter needed)",
+    "Chapter ordering or reordering functionality",
+    "Chapter sharing or collaboration features",
+    "Import/export of syllabus data",
+    "Nested chapter hierarchies or sub-chapters"
   ],
   "imageRequirements": {
     "required": [],

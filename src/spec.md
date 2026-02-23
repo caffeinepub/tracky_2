@@ -1,13 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Add study streak tracking, session history, custom timer settings, motivational quotes, and a statistics dashboard to enhance user engagement and productivity insights.
+**Goal:** Add syllabus chapter tracker to organize study sessions by subject.
 
 **Planned changes:**
-- Implement study streak tracking that counts consecutive days with completed sessions
-- Create session history feature displaying all past study sessions with timestamps and durations
-- Add custom timer settings allowing users to adjust work and break durations
-- Display daily motivational quotes that rotate each day
-- Build a statistics dashboard with charts visualizing study patterns and trends
+- Create backend data model for syllabus chapters with title, subject, and optional notes fields
+- Associate study sessions with specific chapters by adding chapter reference to session records
+- Build frontend component for managing chapters with list view and add/edit/delete functionality
+- Add chapter selection dropdown to Pomodoro timer for associating sessions with chapters
+- Enhance session history view to display associated chapter names and filter by chapter
+- Add chapter-level statistics showing total study time and session count per chapter with visual breakdown
 
-**User-visible outcome:** Users can track their study streaks, view their complete session history, customize timer durations, see daily motivational quotes, and analyze their study patterns through an interactive statistics dashboard with charts.
+**User-visible outcome:** Users can create and manage syllabus chapters, associate study sessions with specific chapters during Pomodoro sessions, view which chapter each session was for in the history, and see study time statistics broken down by chapter.

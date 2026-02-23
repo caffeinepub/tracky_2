@@ -1,11 +1,15 @@
 import { usePomodoro } from '../hooks/usePomodoro';
+import { useChapters } from '../hooks/useQueries';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 import { Play, Pause, RotateCcw } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
 export function PomodoroTimer() {
-  const { minutes, seconds, isRunning, mode, start, pause, reset, progress, workDuration, breakDuration } = usePomodoro();
+  const { minutes, seconds, isRunning, mode, start, pause, reset, progress, workDuration, breakDuration, selectedChapterId, setSelectedChapterId } = usePomodoro();
+  const { data: chapters } = useChapters();
 
   const formatTime = (mins: number, secs: number) => {
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
@@ -28,6 +32,25 @@ export function PomodoroTimer() {
         <CardDescription className="text-base">{getModeDescription()}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-8">
+        {mode === 'work' && !isRunning && chapters && chapters.length > 0 && (
+          <div className="space-y-2">
+            <Label htmlFor="chapter-select">Study Chapter (optional)</Label>
+            <Select value={selectedChapterId || 'none'} onValueChange={(value) => setSelectedChapterId(value === 'none' ? null : value)}>
+              <SelectTrigger id="chapter-select">
+                <SelectValue placeholder="Select a chapter" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">No chapter</SelectItem>
+                {chapters.map((chapter) => (
+                  <SelectItem key={chapter.id} value={chapter.id}>
+                    {chapter.title} - {chapter.subject}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
         <div className="text-center">
           <div className="text-8xl font-bold tracking-tighter tabular-nums text-foreground mb-6">
             {formatTime(minutes, seconds)}

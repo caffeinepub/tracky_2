@@ -1,10 +1,12 @@
-import { useGetStatistics } from '../hooks/useQueries';
+import { useGetStatistics, useGetSessions, useChapters } from '../hooks/useQueries';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, BarChart3, TrendingUp, Clock } from 'lucide-react';
+import { Loader2, BarChart3, TrendingUp, Clock, BookOpen } from 'lucide-react';
 import { StudyChart } from './StudyChart';
 
 export function StatisticsDashboard() {
   const { data: statistics, isLoading, error } = useGetStatistics();
+  const { data: sessions } = useGetSessions();
+  const { data: chapters } = useChapters();
 
   if (isLoading) {
     return (
@@ -48,6 +50,21 @@ export function StatisticsDashboard() {
     ? Math.floor(totalDailyMinutes / statistics.dailyStudyTime.length)
     : 0;
 
+  // Calculate chapter statistics
+  const chapterStats = new Map<string, { time: number; count: number }>();
+  
+  sessions?.filter((s) => s.completed && s.chapterId).forEach((session) => {
+    const chapterId = session.chapterId!;
+    const duration = Number(session.endTime) - Number(session.startTime);
+    const minutes = duration / (1000 * 1000 * 1000 * 60);
+    
+    const existing = chapterStats.get(chapterId) || { time: 0, count: 0 };
+    chapterStats.set(chapterId, {
+      time: existing.time + minutes,
+      count: existing.count + 1,
+    });
+  });
+
   return (
     <Card className="border-border/50">
       <CardHeader>
@@ -88,7 +105,43 @@ export function StatisticsDashboard() {
           </div>
         </div>
 
-        <StudyChart statistics={statistics} />
+        {chapterStats.size > 0 && chapters && chapters.length > 0 && (
+          <div className="space-y-3 p-4 bg-gradient-to-br from-secondary/10 to-primary/10 rounded-lg border border-border/30">
+            <div className="flex items-center gap-2 mb-2">
+              <BookOpen className="h-5 w-5 text-secondary" />
+              <h3 className="font-semibold text-foreground">Chapter Statistics</h3>
+            </div>
+            <div className="space-y-2">
+              {Array.from(chapterStats.entries())
+                .sort((a, b) => b[1].time - a[1].time)
+                .slice(0, 5)
+                .map(([chapterId, stats]) => {
+                  const chapter = chapters.find((c) => c.id === chapterId);
+                  if (!chapter) return null;
+                  
+                  const hours = Math.floor(stats.time / 60);
+                  const minutes = Math.floor(stats.time % 60);
+                  
+                  return (
+                    <div key={chapterId} className="flex items-center justify-between p-3 bg-card/50 rounded-lg">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-foreground truncate">{chapter.title}</p>
+                        <p className="text-xs text-muted-foreground">{chapter.subject}</p>
+                      </div>
+                      <div className="text-right flex-shrink-0 ml-4">
+                        <p className="text-sm font-semibold text-foreground">
+                          {hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`}
+                        </p>
+                        <p className="text-xs text-muted-foreground">{stats.count} sessions</p>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+        )}
+
+        <StudyChart statistics={statistics} sessions={sessions} chapters={chapters} />
       </CardContent>
     </Card>
   );

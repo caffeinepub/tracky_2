@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 5,
+  "projectStateVersion": 7,
   "summary": "Study timer app with authentication and Pomodoro-style timer (25-min work, 5-min break)",
   "architectural_notes": [],
   "known_issues": [],
@@ -69,6 +69,46 @@
         "REQ-8"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-create-a-frontend-component-for-managing-syllabus-chapters-that-displays-a-list-of-all-chapters-with-their-subjects-and-allows-users-to-add-new-chapters-with-title-and-subject-fields",
+      "title": "Create a frontend component for managing syllabus chapters that displays a list of all chapters with their subjects and allows users to add new chapters with title and subject fields",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-chapter-selection-functionality-to-the-pomodoro-timer-so-users-can-optionally-associate-their-current-study-session-with-a-specific-chapter-before-starting-the-timer",
+      "title": "Add chapter selection functionality to the Pomodoro timer so users can optionally associate their current study session with a specific chapter before starting the timer",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-session-history-view-to-display-the-associated-chapter-name-for-each-study-session-with-the-ability-to-filter-sessions-by-chapter",
+      "title": "Enhance the session history view to display the associated chapter name for each study session, with the ability to filter sessions by chapter",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-chapter-level-statistics-to-the-statistics-dashboard-showing-total-study-time-and-session-count-per-chapter-with-visual-breakdown",
+      "title": "Add chapter-level statistics to the statistics dashboard showing total study time and session count per chapter with visual breakdown",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-edit-and-delete-functionality-for-syllabus-chapters-with-confirmation-for-deletion-to-prevent-accidental-data-loss",
+      "title": "Implement edit and delete functionality for syllabus chapters with confirmation for deletion to prevent accidental data loss",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -100,6 +140,28 @@
       "id": "AR-8",
       "summary": "Study statistics dashboard with charts showing study patterns",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Syllabus chapter tracker to organize study sessions by subject",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Create a backend data model for syllabus chapters that includes chapter title, subject/topic, and optional notes or description fields, storing chapters per user with unique identifiers",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Add the ability to associate study sessions with specific syllabus chapters by storing a chapter reference in each session record",
+      "reqIds": [
+        "REQ-10"
+      ],
       "status": "pending"
     }
   ],

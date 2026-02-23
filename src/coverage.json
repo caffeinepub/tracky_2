@@ -1,124 +1,118 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T21:45:39.624Z",
+  "generatedAt": "2026-02-23T21:53:42.990Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 5,
+    "total": 7,
     "implemented": 5,
     "items": [
       {
-        "id": "REQ-4",
-        "summary": "Implement study streak tracking that counts consecutive days with at least one completed study session, storing streak data per user in the backend and displaying current streak count in the UI",
+        "id": "REQ-10",
+        "summary": "Add the ability to associate study sessions with specific syllabus chapters by storing a chapter reference in each session record",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-11",
+        "summary": "Create a frontend component for managing syllabus chapters that displays a list of all chapters with their subjects and allows users to add new chapters with title and subject fields",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useStudyStreak.ts",
-          "frontend/src/components/StreakDisplay.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/hooks/usePomodoro.ts"
+          "frontend/src/components/ChapterManager.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/StreakDisplay.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/hooks/usePomodoro.ts"
+          "frontend/src/components/ChapterManager.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/App.tsx"
         ]
       },
       {
-        "id": "REQ-5",
-        "summary": "Create session history feature that records all completed study sessions with timestamps and durations, storing them in the backend and displaying them in a chronological list in the frontend",
+        "id": "REQ-12",
+        "summary": "Add chapter selection functionality to the Pomodoro timer so users can optionally associate their current study session with a specific chapter before starting the timer",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useSessionHistory.ts",
-          "frontend/src/components/SessionHistory.tsx",
-          "frontend/src/components/SessionHistoryItem.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/hooks/usePomodoro.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/SessionHistory.tsx",
-          "frontend/src/components/SessionHistoryItem.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/hooks/usePomodoro.ts"
-        ]
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Add custom timer settings that allow users to adjust work session and break durations, storing preferences per user in the backend and providing a settings UI in the frontend",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useTimerSettings.ts",
-          "frontend/src/components/TimerSettings.tsx",
           "frontend/src/hooks/usePomodoro.ts",
-          "frontend/src/App.tsx"
+          "frontend/src/components/PomodoroTimer.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/TimerSettings.tsx",
           "frontend/src/hooks/usePomodoro.ts",
-          "frontend/src/App.tsx"
+          "frontend/src/components/PomodoroTimer.tsx"
         ]
       },
       {
-        "id": "REQ-7",
-        "summary": "Display daily motivational quotes that rotate and appear in the UI, with a curated collection of study-focused inspirational messages",
+        "id": "REQ-13",
+        "summary": "Enhance the session history view to display the associated chapter name for each study session, with the ability to filter sessions by chapter",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/data/motivationalQuotes.ts",
-          "frontend/src/hooks/useDailyQuote.ts",
-          "frontend/src/components/DailyQuote.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/components/SessionHistoryItem.tsx",
+          "frontend/src/components/SessionHistory.tsx",
+          "frontend/src/hooks/useQueries.ts"
         ],
         "matchedFiles": [
-          "frontend/src/data/motivationalQuotes.ts",
-          "frontend/src/hooks/useDailyQuote.ts",
-          "frontend/src/components/DailyQuote.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/components/SessionHistoryItem.tsx",
+          "frontend/src/components/SessionHistory.tsx",
+          "frontend/src/hooks/useQueries.ts"
         ]
       },
       {
-        "id": "REQ-8",
-        "summary": "Create a study statistics dashboard with charts visualizing study patterns including daily study time, weekly trends, and session distribution over time periods",
+        "id": "REQ-14",
+        "summary": "Add chapter-level statistics to the statistics dashboard showing total study time and session count per chapter with visual breakdown",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useStudyStatistics.ts",
           "frontend/src/components/StatisticsDashboard.tsx",
-          "frontend/src/components/StudyChart.tsx",
-          "frontend/src/App.tsx",
-          "frontend/package.json"
+          "frontend/src/components/StudyChart.tsx"
         ],
         "matchedFiles": [
           "frontend/src/components/StatisticsDashboard.tsx",
-          "frontend/src/components/StudyChart.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/components/StudyChart.tsx"
         ]
+      },
+      {
+        "id": "REQ-15",
+        "summary": "Implement edit and delete functionality for syllabus chapters with confirmation for deletion to prevent accidental data loss",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/components/ChapterManager.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/components/ChapterManager.tsx"
+        ]
+      },
+      {
+        "id": "REQ-9",
+        "summary": "Create a backend data model for syllabus chapters that includes chapter title, subject/topic, and optional notes or description fields, storing chapters per user with unique identifiers",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
     "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
-    "build-template/README.md",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/DailyQuote.tsx",
+    "frontend/src/components/ChapterManager.tsx",
     "frontend/src/components/PomodoroTimer.tsx",
     "frontend/src/components/SessionHistory.tsx",
     "frontend/src/components/SessionHistoryItem.tsx",
     "frontend/src/components/StatisticsDashboard.tsx",
-    "frontend/src/components/StreakDisplay.tsx",
     "frontend/src/components/StudyChart.tsx",
-    "frontend/src/components/TimerSettings.tsx",
-    "frontend/src/data/motivationalQuotes.ts",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useAuth.ts",
-    "frontend/src/hooks/useDailyQuote.ts",
     "frontend/src/hooks/usePomodoro.ts",
     "frontend/src/hooks/useQueries.ts",
     "project_state.json",

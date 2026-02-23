@@ -1,178 +1,125 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add study streak tracking, session history, custom timer settings, motivational quotes, and statistics dashboard",
+  "title": "Add syllabus chapter tracker to organize study sessions by subject",
   "requirements": [
     {
-      "id": "REQ-4",
-      "summary": "Implement study streak tracking that counts consecutive days with at least one completed study session and displays current streak count in the UI",
+      "id": "REQ-11",
+      "summary": "Create a frontend component for managing syllabus chapters that displays a list of all chapters with their subjects and allows users to add new chapters with title and subject fields",
       "acceptanceCriteria": [
-        "Streak increments when user completes a session on a new calendar day",
-        "Streak resets to 1 if more than one day has passed since last session",
-        "Frontend displays current streak count prominently in the UI",
-        "Streak persists across browser sessions and app upgrades"
+        "Component displays all user chapters in a card-based layout consistent with existing UI design",
+        "Add chapter form includes title and subject input fields with validation",
+        "Users can create new chapters and see them appear in the list immediately",
+        "Component uses warm earthy color palette matching existing theme"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useStudyStreak.ts",
+          "path": "frontend/src/components/ChapterManager.tsx",
           "operation": "create",
-          "description": "Create React Query hook that fetches current streak from backend using getCurrentStreak method and provides streak data to components with automatic refetch on session completion"
+          "description": "Create a card-based chapter management component that displays all user chapters with title and subject, includes an add chapter form with validation for title and subject fields, and uses the warm earthy color palette with gradient backgrounds matching existing card patterns"
         },
         {
-          "path": "frontend/src/components/StreakDisplay.tsx",
-          "operation": "create",
-          "description": "Create component that displays current streak count with fire emoji and day counter, using useStudyStreak hook, with loading and error states"
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add useChapters query hook to fetch chapters from backend using getChapters method, add useCreateChapter mutation hook that calls createChapter backend method and invalidates the chapters query on success"
         },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add StreakDisplay component to authenticated user layout, positioned prominently near the timer section"
-        },
-        {
-          "path": "frontend/src/hooks/usePomodoro.ts",
-          "operation": "modify",
-          "description": "Integrate backend endSession call when timer completes a work session, passing timestamp to record session completion and trigger streak calculation"
+          "description": "Import and add ChapterManager component to the authenticated view after TimerSettings and before DailyQuote to integrate chapter management into the main application flow"
         }
       ]
     },
     {
-      "id": "REQ-5",
-      "summary": "Create session history feature that records all completed study sessions and displays them in a chronological list",
+      "id": "REQ-12",
+      "summary": "Add chapter selection functionality to the Pomodoro timer so users can optionally associate their current study session with a specific chapter before starting the timer",
       "acceptanceCriteria": [
-        "Frontend displays sessions in reverse chronological order (newest first)",
-        "Each session entry shows date, time, duration, and type",
-        "Display total time studied across all sessions",
-        "Session history is filterable by date range or session type"
+        "Timer component includes a chapter selector dropdown or similar UI element",
+        "Users can choose a chapter or leave it unassociated",
+        "Selected chapter is passed to backend when starting a study session",
+        "Chapter selection is cleared after session completion"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useSessionHistory.ts",
-          "operation": "create",
-          "description": "Create React Query hook that fetches session history from backend using getSessions method, transforms backend StudySession data into displayable format with duration calculations"
+          "path": "frontend/src/hooks/usePomodoro.ts",
+          "operation": "modify",
+          "description": "Add selectedChapterId state to track the currently selected chapter, pass chapterId parameter to startSession backend method when starting a timer, clear selectedChapterId after session completion, and expose setSelectedChapterId function for UI control"
+        },
+        {
+          "path": "frontend/src/components/PomodoroTimer.tsx",
+          "operation": "modify",
+          "description": "Add chapter selector dropdown UI element above the timer controls using useChapters hook to fetch available chapters, display chapter title and subject in options, allow users to select a chapter or choose none, and bind selection to usePomodoro selectedChapterId state"
+        }
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "summary": "Enhance the session history view to display the associated chapter name for each study session, with the ability to filter sessions by chapter",
+      "acceptanceCriteria": [
+        "Each session item shows the chapter title and subject if associated",
+        "Users can filter the session history list by selecting a specific chapter",
+        "Filter UI matches existing design patterns and color scheme",
+        "Unassociated sessions are clearly indicated"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/SessionHistoryItem.tsx",
+          "operation": "modify",
+          "description": "Add chapter display to session item showing chapter title and subject when chapterId is present, fetch chapter details using the chapters list from context or props, display unassociated sessions with a clear indicator like 'No chapter' or 'Unassociated'"
         },
         {
           "path": "frontend/src/components/SessionHistory.tsx",
-          "operation": "create",
-          "description": "Create component displaying session list in reverse chronological order with date/time formatting, duration display, and total time calculation, including filter controls for date range and session type"
-        },
-        {
-          "path": "frontend/src/components/SessionHistoryItem.tsx",
-          "operation": "create",
-          "description": "Create component rendering individual session entry with formatted date, time, duration display in minutes/hours, and visual indicator for work vs break sessions"
-        },
-        {
-          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add SessionHistory component to authenticated user layout below the timer section"
+          "description": "Add chapter filter dropdown above the session list using useChapters hook to populate filter options, implement client-side filtering to show only sessions matching the selected chapter or all sessions when no filter is active, use existing card and select styling patterns"
         },
         {
-          "path": "frontend/src/hooks/usePomodoro.ts",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Call backend startSession when timer starts and endSession when timer completes, passing timestamps to record session data"
+          "description": "Ensure useSessions query returns session data including chapterId field for each session to support chapter display and filtering in the history view"
         }
       ]
     },
     {
-      "id": "REQ-6",
-      "summary": "Add custom timer settings that allow users to adjust work session and break durations with a settings UI",
+      "id": "REQ-14",
+      "summary": "Add chapter-level statistics to the statistics dashboard showing total study time and session count per chapter with visual breakdown",
       "acceptanceCriteria": [
-        "Frontend provides settings interface with input controls for work and break durations",
-        "Duration ranges are validated (minimum 1 minute, maximum 90 minutes)",
-        "Custom durations apply to new timer sessions immediately after saving",
-        "Settings persist across browser sessions",
-        "Default values remain 25 minutes for work and 5 minutes for breaks"
+        "Dashboard includes a new section for chapter statistics",
+        "Shows study time distribution across chapters using charts",
+        "Displays session count per chapter",
+        "Integrates with existing Recharts visualization patterns"
       ],
       "file_operations": [
-        {
-          "path": "frontend/src/hooks/useTimerSettings.ts",
-          "operation": "create",
-          "description": "Create React Query hook that fetches user settings from backend using getSettings method and provides mutation for updating settings via updateSettings method with optimistic updates"
-        },
-        {
-          "path": "frontend/src/components/TimerSettings.tsx",
-          "operation": "create",
-          "description": "Create settings form component with number inputs for work and break durations, validation for 1-90 minute range, save button, and loading states using useTimerSettings hook"
-        },
-        {
-          "path": "frontend/src/hooks/usePomodoro.ts",
-          "operation": "modify",
-          "description": "Integrate useTimerSettings hook to retrieve custom work and break durations from backend settings instead of hardcoded 25/5 values, updating timer initialization to use fetched durations"
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add TimerSettings component to authenticated user layout, positioned in an expandable settings panel or modal accessible via settings icon"
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Display daily motivational quotes that rotate and appear in the UI with study-focused inspirational messages",
-      "acceptanceCriteria": [
-        "Frontend maintains a collection of at least 30 study-focused motivational quotes",
-        "Display one random quote per day that remains consistent throughout the day",
-        "Quote appears in a dedicated section of the UI with appropriate styling",
-        "Quote changes at midnight local time",
-        "Quote display is visible to authenticated users"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/data/motivationalQuotes.ts",
-          "operation": "create",
-          "description": "Create array of at least 30 study-focused motivational quotes with author attributions"
-        },
-        {
-          "path": "frontend/src/hooks/useDailyQuote.ts",
-          "operation": "create",
-          "description": "Create hook that selects one quote per day using date-based deterministic selection (not random), ensuring quote remains consistent throughout the day and changes at midnight local time"
-        },
-        {
-          "path": "frontend/src/components/DailyQuote.tsx",
-          "operation": "create",
-          "description": "Create component displaying the daily quote with appropriate styling using warm earthy colors, quote marks, and author attribution, integrating useDailyQuote hook"
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add DailyQuote component to authenticated user layout, positioned prominently near the top of the interface"
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Create a study statistics dashboard with charts visualizing study patterns including daily study time, weekly trends, and session distribution",
-      "acceptanceCriteria": [
-        "Frontend displays interactive charts showing study time trends over selectable periods",
-        "Dashboard shows total study time, average session length, and most productive time of day",
-        "Charts update in real-time as new sessions are completed",
-        "Dashboard is accessible via navigation and displays data only for authenticated users",
-        "Use a charting library compatible with React and the existing tech stack"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useStudyStatistics.ts",
-          "operation": "create",
-          "description": "Create React Query hook that fetches statistics from backend using getStatistics method, providing daily, weekly, and session distribution data with automatic refetch on session completion"
-        },
         {
           "path": "frontend/src/components/StatisticsDashboard.tsx",
-          "operation": "create",
-          "description": "Create dashboard component that displays total study time, average session length, and most productive time of day using data from useStudyStatistics hook, with loading and error states"
+          "operation": "modify",
+          "description": "Add a new chapter statistics section below existing metrics that calculates total study time and session count per chapter from sessions data grouped by chapterId, display results in a card matching existing design patterns with warm colors"
         },
         {
           "path": "frontend/src/components/StudyChart.tsx",
-          "operation": "create",
-          "description": "Create chart component using recharts library to render interactive line and bar charts for daily study time, weekly trends, and session distribution, with period selector dropdown"
+          "operation": "modify",
+          "description": "Add a new chart tab for chapter distribution showing a bar chart of study time per chapter and a pie or bar chart for session count per chapter using Recharts components consistent with existing chart styling and color palette"
+        }
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "summary": "Implement edit and delete functionality for syllabus chapters with confirmation for deletion to prevent accidental data loss",
+      "acceptanceCriteria": [
+        "Users can edit chapter title, subject, and notes after creation",
+        "Delete action shows confirmation dialog",
+        "Deleting a chapter does not delete associated sessions but marks them as unassociated",
+        "Backend enforces ownership validation for edit and delete operations"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add useEditChapter mutation hook that calls editChapter backend method with chapterId, newTitle, newSubject, and newNotes parameters, add useDeleteChapter mutation hook that calls deleteChapter backend method, invalidate chapters and sessions queries after successful mutations"
         },
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/components/ChapterManager.tsx",
           "operation": "modify",
-          "description": "Add StatisticsDashboard component to authenticated user layout below session history, creating a dedicated statistics section"
-        },
-        {
-          "path": "frontend/package.json",
-          "operation": "modify",
-          "description": "Add recharts charting library dependency to support interactive chart rendering with React compatibility"
+          "description": "Add edit button to each chapter card that opens an inline or modal edit form with fields for title, subject, and notes, add delete button that shows a confirmation dialog before calling useDeleteChapter mutation, display success/error toast notifications using existing patterns"
         }
       ]
     }

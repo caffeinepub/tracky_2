@@ -12,6 +12,7 @@ export function usePomodoro() {
   const [mode, setMode] = useState<PomodoroMode>('work');
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
+  const [selectedChapterId, setSelectedChapterId] = useState<string | null>(null);
   const intervalRef = useRef<number | null>(null);
   const sessionStartTimeRef = useRef<bigint | null>(null);
 
@@ -41,6 +42,11 @@ export function usePomodoro() {
     setMode(newMode);
     setTimeLeft(getDuration(newMode));
     setIsRunning(false);
+    
+    // Clear chapter selection after completing a work session
+    if (mode === 'work') {
+      setSelectedChapterId(null);
+    }
 
     if (newMode === 'break') {
       toast.success('Great work! Time for a break 🎉', {
@@ -81,7 +87,7 @@ export function usePomodoro() {
     if (mode === 'work' && !sessionStartTimeRef.current) {
       const startTime = BigInt(Date.now()) * 1000000n; // Convert to nanoseconds
       sessionStartTimeRef.current = startTime;
-      await startSessionMutation.mutateAsync(startTime);
+      await startSessionMutation.mutateAsync({ startTime, chapterId: selectedChapterId });
     }
     setIsRunning(true);
   };
@@ -116,5 +122,7 @@ export function usePomodoro() {
     progress,
     workDuration: Math.floor(workDuration / 60),
     breakDuration: Math.floor(breakDuration / 60),
+    selectedChapterId,
+    setSelectedChapterId,
   };
 }

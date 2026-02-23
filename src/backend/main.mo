@@ -1,15 +1,20 @@
 import Principal "mo:core/Principal";
 import Map "mo:core/Map";
+import Text "mo:core/Text";
 import Time "mo:core/Time";
 import Int "mo:core/Int";
 import Array "mo:core/Array";
+import Iter "mo:core/Iter";
 import Runtime "mo:core/Runtime";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   type StudySession = {
     startTime : Time.Time;
     endTime : Time.Time;
     completed : Bool;
+    chapterId : ?Text;
   };
 
   type UserSettings = {
@@ -22,6 +27,13 @@ actor {
     lastSessionDay : Int;
   };
 
+  type SyllabusChapter = {
+    id : Text;
+    title : Text;
+    subject : Text;
+    notes : ?Text;
+  };
+
   type SessionWithDay = {
     session : StudySession;
     day : Int;
@@ -31,6 +43,7 @@ actor {
   let userSessions = Map.empty<Principal, [StudySession]>();
   let userSettings = Map.empty<Principal, UserSettings>();
   let userStreaks = Map.empty<Principal, StreakData>();
+  let userChapters = Map.empty<Principal, Map.Map<Text, SyllabusChapter>>();
 
   public shared ({ caller }) func login() : async () {
     if (loggedInUsers.containsKey(caller)) {
@@ -52,12 +65,13 @@ actor {
     };
   };
 
-  public shared ({ caller }) func startSession(startTime : Time.Time) : async () {
+  public shared ({ caller }) func startSession(startTime : Time.Time, chapterId : ?Text) : async () {
     assertLoggedIn(caller);
     let newSession : StudySession = {
       startTime;
       endTime = 0;
       completed = false;
+      chapterId;
     };
     let existingSessions = switch (userSessions.get(caller)) {
       case (null) { [newSession] };
@@ -95,6 +109,71 @@ actor {
       breakDuration;
     };
     userSettings.add(caller, settings);
+  };
+
+  public shared ({ caller }) func createChapter(title : Text, subject : Text, notes : ?Text) : async () {
+    assertLoggedIn(caller);
+    let chapterId = title.concat(subject);
+    let chapter : SyllabusChapter = {
+      id = chapterId;
+      title;
+      subject;
+      notes;
+    };
+
+    let userSpecificChapters = switch (userChapters.get(caller)) {
+      case (null) {
+        let map = Map.empty<Text, SyllabusChapter>();
+        map.add(chapterId, chapter);
+        map;
+      };
+      case (?chapters) {
+        chapters.add(chapterId, chapter);
+        chapters;
+      };
+    };
+    userChapters.add(caller, userSpecificChapters);
+  };
+
+  public shared ({ caller }) func editChapter(chapterId : Text, newTitle : Text, newSubject : Text, newNotes : ?Text) : async () {
+    assertLoggedIn(caller);
+    switch (userChapters.get(caller)) {
+      case (null) { Runtime.trap("Chapter not found") };
+      case (?chapters) {
+        if (not chapters.containsKey(chapterId)) {
+          Runtime.trap("Chapter not found");
+        };
+        let updatedChapter : SyllabusChapter = {
+          id = chapterId;
+          title = newTitle;
+          subject = newSubject;
+          notes = newNotes;
+        };
+        chapters.add(chapterId, updatedChapter);
+      };
+    };
+  };
+
+  public shared ({ caller }) func deleteChapter(chapterId : Text) : async () {
+    assertLoggedIn(caller);
+    switch (userChapters.get(caller)) {
+      case (null) { Runtime.trap("Chapter not found") };
+      case (?chapters) {
+        if (not chapters.containsKey(chapterId)) {
+          Runtime.trap("Chapter not found");
+        };
+        chapters.remove(chapterId);
+      };
+    };
+  };
+
+  public query ({ caller }) func getChapters() : async [SyllabusChapter] {
+    switch (userChapters.get(caller)) {
+      case (null) { [] };
+      case (?chapters) {
+        chapters.values().toArray();
+      };
+    };
   };
 
   public query ({ caller }) func getSessions() : async [StudySession] {
