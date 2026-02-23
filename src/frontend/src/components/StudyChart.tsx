@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import type { StudySession, SyllabusChapter } from '../backend';
+import { Progress } from '@/components/ui/progress';
+import { CheckCircle2 } from 'lucide-react';
+import type { StudySession, SyllabusChapter } from '../lib/types';
 
 interface StudyChartProps {
   statistics?: {
@@ -42,8 +44,8 @@ export function StudyChart({ statistics, sessions, chapters }: StudyChartProps) 
   })) || [];
 
   // Calculate chapter distribution
-  const chapterTimeData: { name: string; value: number }[] = [];
-  const chapterSessionData: { name: string; value: number }[] = [];
+  const chapterTimeData: { name: string; value: number; completed: boolean }[] = [];
+  const chapterSessionData: { name: string; value: number; completed: boolean }[] = [];
   
   if (sessions && chapters && chapters.length > 0) {
     const chapterStats = new Map<string, { time: number; count: number }>();
@@ -66,14 +68,27 @@ export function StudyChart({ statistics, sessions, chapters }: StudyChartProps) 
         chapterTimeData.push({
           name: chapter.title,
           value: Math.floor(stats.time),
+          completed: chapter.completed,
         });
         chapterSessionData.push({
           name: chapter.title,
           value: stats.count,
+          completed: chapter.completed,
         });
       }
     });
   }
+
+  // Calculate chapter completion statistics
+  const totalChapters = chapters?.length || 0;
+  const completedChapters = chapters?.filter(c => c.completed).length || 0;
+  const incompleteChapters = totalChapters - completedChapters;
+  const completionPercentage = totalChapters > 0 ? Math.round((completedChapters / totalChapters) * 100) : 0;
+
+  const completionData = [
+    { name: 'Completed', value: completedChapters, color: 'oklch(var(--primary))' },
+    { name: 'Incomplete', value: incompleteChapters, color: 'oklch(var(--muted))' },
+  ].filter(d => d.value > 0);
 
   if (!statistics || (dailyData.length === 0 && weeklyData.length === 0 && distributionData.length === 0)) {
     return (
@@ -89,10 +104,11 @@ export function StudyChart({ statistics, sessions, chapters }: StudyChartProps) 
   return (
     <div className="space-y-4">
       <Tabs defaultValue="time" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="time">Study Time</TabsTrigger>
           <TabsTrigger value="distribution">Session Distribution</TabsTrigger>
           <TabsTrigger value="chapters">By Chapter</TabsTrigger>
+          <TabsTrigger value="completion">Completion</TabsTrigger>
         </TabsList>
         
         <TabsContent value="time" className="space-y-4">
@@ -196,10 +212,32 @@ export function StudyChart({ statistics, sessions, chapters }: StudyChartProps) 
                         border: '1px solid oklch(var(--border))',
                         borderRadius: '8px',
                       }}
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
+                              <p className="font-medium">{data.name}</p>
+                              <p className="text-sm text-muted-foreground">{data.value} minutes</p>
+                              {data.completed && (
+                                <div className="flex items-center gap-1 mt-1">
+                                  <CheckCircle2 className="h-3 w-3 text-primary" />
+                                  <span className="text-xs text-primary">Completed</span>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
                     />
                     <Bar dataKey="value" radius={[8, 8, 0, 0]}>
-                      {chapterTimeData.map((_, index) => (
-                        <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                      {chapterTimeData.map((entry, index) => (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={entry.completed ? 'oklch(var(--primary))' : CHART_COLORS[index % CHART_COLORS.length]} 
+                          opacity={entry.completed ? 0.7 : 1}
+                        />
                       ))}
                     </Bar>
                   </BarChart>
@@ -220,8 +258,12 @@ export function StudyChart({ statistics, sessions, chapters }: StudyChartProps) 
                       fill="oklch(var(--primary))"
                       dataKey="value"
                     >
-                      {chapterSessionData.map((_, index) => (
-                        <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                      {chapterSessionData.map((entry, index) => (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={entry.completed ? 'oklch(var(--primary))' : CHART_COLORS[index % CHART_COLORS.length]}
+                          opacity={entry.completed ? 0.7 : 1}
+                        />
                       ))}
                     </Pie>
                     <Tooltip 
@@ -229,6 +271,24 @@ export function StudyChart({ statistics, sessions, chapters }: StudyChartProps) 
                         backgroundColor: 'oklch(var(--card))',
                         border: '1px solid oklch(var(--border))',
                         borderRadius: '8px',
+                      }}
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
+                              <p className="font-medium">{data.name}</p>
+                              <p className="text-sm text-muted-foreground">{data.value} sessions</p>
+                              {data.completed && (
+                                <div className="flex items-center gap-1 mt-1">
+                                  <CheckCircle2 className="h-3 w-3 text-primary" />
+                                  <span className="text-xs text-primary">Completed</span>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        }
+                        return null;
                       }}
                     />
                   </PieChart>
@@ -240,6 +300,87 @@ export function StudyChart({ statistics, sessions, chapters }: StudyChartProps) 
               <p className="text-muted-foreground">No chapter data available</p>
               <p className="text-sm text-muted-foreground">
                 Complete study sessions with chapters assigned to see statistics
+              </p>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="completion" className="space-y-4">
+          {totalChapters > 0 ? (
+            <>
+              <div className="p-6 border border-border/50 rounded-lg bg-gradient-to-br from-primary/10 to-secondary/10 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-foreground">Overall Progress</h3>
+                  <div className="text-right">
+                    <p className="text-3xl font-bold text-foreground">{completionPercentage}%</p>
+                    <p className="text-sm text-muted-foreground">Complete</p>
+                  </div>
+                </div>
+                <Progress value={completionPercentage} className="h-3" />
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">
+                    {completedChapters} of {totalChapters} chapters completed
+                  </span>
+                  <span className="text-muted-foreground">
+                    {incompleteChapters} remaining
+                  </span>
+                </div>
+              </div>
+
+              {completionData.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-3">Completion Breakdown</h4>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={completionData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, value, percent }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
+                        outerRadius={100}
+                        dataKey="value"
+                      >
+                        {completionData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        contentStyle={{
+                          backgroundColor: 'oklch(var(--card))',
+                          border: '1px solid oklch(var(--border))',
+                          borderRadius: '8px',
+                        }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 border border-border/50 rounded-lg bg-primary/10">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                    <h4 className="font-semibold text-foreground">Completed</h4>
+                  </div>
+                  <p className="text-3xl font-bold text-foreground">{completedChapters}</p>
+                  <p className="text-sm text-muted-foreground">chapters</p>
+                </div>
+                <div className="p-4 border border-border/50 rounded-lg bg-muted/30">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CheckCircle2 className="h-5 w-5 text-muted-foreground" />
+                    <h4 className="font-semibold text-foreground">Incomplete</h4>
+                  </div>
+                  <p className="text-3xl font-bold text-foreground">{incompleteChapters}</p>
+                  <p className="text-sm text-muted-foreground">chapters</p>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-12 space-y-2">
+              <p className="text-muted-foreground">No chapters yet</p>
+              <p className="text-sm text-muted-foreground">
+                Add chapters to track your completion progress
               </p>
             </div>
           )}

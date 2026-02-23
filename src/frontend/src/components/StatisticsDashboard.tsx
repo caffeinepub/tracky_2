@@ -1,6 +1,7 @@
 import { useGetStatistics, useGetSessions, useChapters } from '../hooks/useQueries';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, BarChart3, TrendingUp, Clock, BookOpen } from 'lucide-react';
+import { Loader2, BarChart3, TrendingUp, Clock, BookOpen, CheckCircle2 } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
 import { StudyChart } from './StudyChart';
 
 export function StatisticsDashboard() {
@@ -65,6 +66,11 @@ export function StatisticsDashboard() {
     });
   });
 
+  // Calculate chapter completion statistics
+  const totalChapters = chapters?.length || 0;
+  const completedChapters = chapters?.filter(c => c.completed).length || 0;
+  const completionPercentage = totalChapters > 0 ? Math.round((completedChapters / totalChapters) * 100) : 0;
+
   return (
     <Card className="border-border/50">
       <CardHeader>
@@ -77,7 +83,7 @@ export function StatisticsDashboard() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="space-y-1 p-4 bg-accent/30 rounded-lg">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Clock className="h-4 w-4" />
@@ -99,40 +105,68 @@ export function StatisticsDashboard() {
               <BarChart3 className="h-4 w-4" />
               <p className="text-sm">Sessions</p>
             </div>
-            <p className="text-2xl font-bold text-foreground">
-              {statistics?.dailyStudyTime.length || 0}
-            </p>
+            <p className="text-2xl font-bold text-foreground">{sessions?.length || 0}</p>
+          </div>
+          <div className="space-y-1 p-4 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <CheckCircle2 className="h-4 w-4" />
+              <p className="text-sm">Completion</p>
+            </div>
+            <p className="text-2xl font-bold text-foreground">{completionPercentage}%</p>
           </div>
         </div>
 
-        {chapterStats.size > 0 && chapters && chapters.length > 0 && (
-          <div className="space-y-3 p-4 bg-gradient-to-br from-secondary/10 to-primary/10 rounded-lg border border-border/30">
-            <div className="flex items-center gap-2 mb-2">
-              <BookOpen className="h-5 w-5 text-secondary" />
-              <h3 className="font-semibold text-foreground">Chapter Statistics</h3>
+        {/* Chapter Completion Progress */}
+        {totalChapters > 0 && (
+          <div className="p-4 border border-border/50 rounded-lg bg-gradient-to-br from-primary/5 to-secondary/5 space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-foreground flex items-center gap-2">
+                <BookOpen className="h-5 w-5" />
+                Chapter Progress
+              </h3>
+              <span className="text-sm text-muted-foreground">
+                {completedChapters} / {totalChapters} completed
+              </span>
             </div>
-            <div className="space-y-2">
+            <Progress value={completionPercentage} className="h-2" />
+          </div>
+        )}
+
+        {/* Top Chapters by Study Time */}
+        {chapterStats.size > 0 && (
+          <div className="space-y-3">
+            <h3 className="font-semibold text-foreground">Top Chapters by Study Time</h3>
+            <div className="grid gap-3">
               {Array.from(chapterStats.entries())
                 .sort((a, b) => b[1].time - a[1].time)
                 .slice(0, 5)
                 .map(([chapterId, stats]) => {
-                  const chapter = chapters.find((c) => c.id === chapterId);
+                  const chapter = chapters?.find((c) => c.id === chapterId);
                   if (!chapter) return null;
                   
-                  const hours = Math.floor(stats.time / 60);
-                  const minutes = Math.floor(stats.time % 60);
-                  
                   return (
-                    <div key={chapterId} className="flex items-center justify-between p-3 bg-card/50 rounded-lg">
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-foreground truncate">{chapter.title}</p>
-                        <p className="text-xs text-muted-foreground">{chapter.subject}</p>
-                      </div>
-                      <div className="text-right flex-shrink-0 ml-4">
-                        <p className="text-sm font-semibold text-foreground">
-                          {hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`}
-                        </p>
-                        <p className="text-xs text-muted-foreground">{stats.count} sessions</p>
+                    <div
+                      key={chapterId}
+                      className="p-3 border border-border/50 rounded-lg bg-gradient-to-br from-primary/5 to-secondary/5"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-medium text-foreground">{chapter.title}</h4>
+                            {chapter.completed && (
+                              <CheckCircle2 className="h-4 w-4 text-primary" />
+                            )}
+                          </div>
+                          <p className="text-sm text-muted-foreground">{chapter.subject}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-lg font-bold text-foreground">
+                            {Math.floor(stats.time)} min
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {stats.count} {stats.count === 1 ? 'session' : 'sessions'}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   );

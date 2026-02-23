@@ -2,6 +2,7 @@ import { useActor } from './useActor';
 import { useInternetIdentity } from './useInternetIdentity';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import type { ExtendedBackendInterface } from '../lib/types';
 
 export function useAuth() {
   const { actor, isFetching: isActorFetching } = useActor();
@@ -10,58 +11,108 @@ export function useAuth() {
 
   const loginMutation = useMutation({
     mutationFn: async () => {
-      if (!actor) throw new Error('Actor not initialized');
-      await actor.login();
+      console.log('[useAuth] Login mutation started', { actor: !!actor });
+      
+      if (!actor) {
+        console.error('[useAuth] Actor not initialized');
+        throw new Error('Backend connection not available');
+      }
+
+      const extendedActor = actor as unknown as ExtendedBackendInterface;
+
+      // Check if login method exists
+      if (typeof extendedActor.login !== 'function') {
+        console.error('[useAuth] Backend login method not found. Backend may be empty.');
+        throw new Error('Backend login method not available. The backend may need to be redeployed.');
+      }
+
+      try {
+        await extendedActor.login();
+        console.log('[useAuth] Backend login successful');
+      } catch (error) {
+        console.error('[useAuth] Backend login failed:', error);
+        throw error;
+      }
     },
     onSuccess: () => {
+      console.log('[useAuth] Login successful, invalidating queries');
       queryClient.invalidateQueries({ queryKey: ['auth'] });
       queryClient.invalidateQueries({ queryKey: ['streak'] });
       queryClient.invalidateQueries({ queryKey: ['sessions'] });
       queryClient.invalidateQueries({ queryKey: ['settings'] });
       queryClient.invalidateQueries({ queryKey: ['statistics'] });
+      queryClient.invalidateQueries({ queryKey: ['chapters'] });
       toast.success('Successfully logged in!');
     },
     onError: (error: Error) => {
-      console.error('Login error:', error);
-      toast.error('Login failed. Please try again.');
+      console.error('[useAuth] Login error:', error);
+      toast.error(error.message || 'Login failed. Please try again.');
     },
   });
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      if (!actor) throw new Error('Actor not initialized');
-      await actor.logout();
+      console.log('[useAuth] Logout mutation started', { actor: !!actor });
+      
+      if (!actor) {
+        console.error('[useAuth] Actor not initialized');
+        throw new Error('Backend connection not available');
+      }
+
+      const extendedActor = actor as unknown as ExtendedBackendInterface;
+
+      // Check if logout method exists
+      if (typeof extendedActor.logout !== 'function') {
+        console.error('[useAuth] Backend logout method not found');
+        throw new Error('Backend logout method not available');
+      }
+
+      try {
+        await extendedActor.logout();
+        console.log('[useAuth] Backend logout successful');
+      } catch (error) {
+        console.error('[useAuth] Backend logout failed:', error);
+        throw error;
+      }
     },
     onSuccess: () => {
+      console.log('[useAuth] Logout successful');
       iiClear();
       queryClient.invalidateQueries({ queryKey: ['auth'] });
       queryClient.invalidateQueries({ queryKey: ['streak'] });
       queryClient.invalidateQueries({ queryKey: ['sessions'] });
       queryClient.invalidateQueries({ queryKey: ['settings'] });
       queryClient.invalidateQueries({ queryKey: ['statistics'] });
+      queryClient.invalidateQueries({ queryKey: ['chapters'] });
       toast.success('Successfully logged out!');
     },
     onError: (error: Error) => {
-      console.error('Logout error:', error);
-      toast.error('Logout failed. Please try again.');
+      console.error('[useAuth] Logout error:', error);
+      toast.error(error.message || 'Logout failed. Please try again.');
     },
   });
 
   const handleLogin = async () => {
     try {
+      console.log('[useAuth] Starting Internet Identity login');
       await iiLogin();
+      
       // Wait for identity to be set
       const checkIdentity = setInterval(async () => {
         if (loginStatus === 'success' && identity && actor) {
+          console.log('[useAuth] Identity ready, calling backend login');
           clearInterval(checkIdentity);
           await loginMutation.mutateAsync();
         }
       }, 100);
 
       // Clear interval after 30 seconds to prevent memory leak
-      setTimeout(() => clearInterval(checkIdentity), 30000);
+      setTimeout(() => {
+        clearInterval(checkIdentity);
+        console.log('[useAuth] Login timeout cleared');
+      }, 30000);
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('[useAuth] Internet Identity login error:', error);
       toast.error('Login failed. Please try again.');
     }
   };
@@ -73,6 +124,14 @@ export function useAuth() {
   // User is authenticated if they have an identity and login was successful
   const isAuthenticated = !!identity && loginStatus === 'success';
   const isLoading = isInitializing || isActorFetching || loginStatus === 'logging-in';
+
+  console.log('[useAuth] Auth state:', {
+    isAuthenticated,
+    isLoading,
+    hasIdentity: !!identity,
+    loginStatus,
+    hasActor: !!actor
+  });
 
   return {
     isAuthenticated,

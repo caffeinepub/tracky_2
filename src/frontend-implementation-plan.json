@@ -1,125 +1,110 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add syllabus chapter tracker to organize study sessions by subject",
+  "title": "Debug and fix non-functional application deployment",
   "requirements": [
     {
-      "id": "REQ-11",
-      "summary": "Create a frontend component for managing syllabus chapters that displays a list of all chapters with their subjects and allows users to add new chapters with title and subject fields",
+      "id": "REQ-24",
+      "summary": "Investigate and identify deployment issues by checking runtime errors, network requests, and component rendering",
       "acceptanceCriteria": [
-        "Component displays all user chapters in a card-based layout consistent with existing UI design",
-        "Add chapter form includes title and subject input fields with validation",
-        "Users can create new chapters and see them appear in the list immediately",
-        "Component uses warm earthy color palette matching existing theme"
+        "Browser console shows no critical JavaScript errors",
+        "Network tab shows successful responses from backend canister",
+        "Application loads and displays the main interface without blank screens or crashes"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/ChapterManager.tsx",
-          "operation": "create",
-          "description": "Create a card-based chapter management component that displays all user chapters with title and subject, includes an add chapter form with validation for title and subject fields, and uses the warm earthy color palette with gradient backgrounds matching existing card patterns"
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/src/hooks/useActor.ts",
           "operation": "modify",
-          "description": "Add useChapters query hook to fetch chapters from backend using getChapters method, add useCreateChapter mutation hook that calls createChapter backend method and invalidates the chapters query on success"
+          "description": "Add comprehensive error logging to the useActor hook to capture backend actor initialization failures, authentication state transitions, and network connectivity issues. Include console error messages with detailed context about which stage of actor creation failed (anonymous vs authenticated) and any rejection reasons from the backend canister."
         },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Import and add ChapterManager component to the authenticated view after TimerSettings and before DailyQuote to integrate chapter management into the main application flow"
+          "description": "Wrap the main application component tree with error boundaries and add defensive null checks for all hook return values (useAuth, useDailyQuote, useStreak, useSettings). Add loading states and error display UI for each major section to prevent blank screens when backend queries fail. Include console logging at component mount to verify rendering pipeline."
+        },
+        {
+          "path": "frontend/src/hooks/useAuth.ts",
+          "operation": "modify",
+          "description": "Add detailed error logging throughout the authentication flow to capture Internet Identity login failures, backend actor initialization errors during auth state changes, and query invalidation issues. Log the authentication state transitions and any exceptions thrown during login/logout operations."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add error handling and logging to all React Query hooks to capture backend method call failures. Include retry configuration and error state exposure for each query (streak, sessions, settings, chapters, statistics). Log the specific backend method being called and any error responses to help identify which backend capabilities are failing."
         }
       ]
     },
     {
-      "id": "REQ-12",
-      "summary": "Add chapter selection functionality to the Pomodoro timer so users can optionally associate their current study session with a specific chapter before starting the timer",
+      "id": "REQ-25",
+      "summary": "Fix identified issues preventing core features from functioning including authentication, timer, and data persistence",
       "acceptanceCriteria": [
-        "Timer component includes a chapter selector dropdown or similar UI element",
-        "Users can choose a chapter or leave it unassociated",
-        "Selected chapter is passed to backend when starting a study session",
-        "Chapter selection is cleared after session completion"
+        "All core features (timer, authentication, chapter management) are operational",
+        "Users can successfully log in using Internet Identity",
+        "Data persistence works correctly between sessions",
+        "UI components render properly with the warm earthy theme"
       ],
       "file_operations": [
+        {
+          "path": "frontend/src/hooks/useActor.ts",
+          "operation": "modify",
+          "description": "Fix any actor initialization race conditions by ensuring the backend actor is properly created before queries attempt to use it. Add null checks and loading states. Verify the actor creation logic handles both authenticated and anonymous states correctly, and ensure the canisterId is properly resolved from environment variables or declarations."
+        },
+        {
+          "path": "frontend/src/hooks/useAuth.ts",
+          "operation": "modify",
+          "description": "Fix authentication flow issues by ensuring backend actor methods are called only after successful Internet Identity authentication. Add proper error handling for backend registration/login failures. Ensure query invalidation happens after authentication state changes to trigger data refetch with the new authenticated actor."
+        },
         {
           "path": "frontend/src/hooks/usePomodoro.ts",
           "operation": "modify",
-          "description": "Add selectedChapterId state to track the currently selected chapter, pass chapterId parameter to startSession backend method when starting a timer, clear selectedChapterId after session completion, and expose setSelectedChapterId function for UI control"
-        },
-        {
-          "path": "frontend/src/components/PomodoroTimer.tsx",
-          "operation": "modify",
-          "description": "Add chapter selector dropdown UI element above the timer controls using useChapters hook to fetch available chapters, display chapter title and subject in options, allow users to select a chapter or choose none, and bind selection to usePomodoro selectedChapterId state"
-        }
-      ]
-    },
-    {
-      "id": "REQ-13",
-      "summary": "Enhance the session history view to display the associated chapter name for each study session, with the ability to filter sessions by chapter",
-      "acceptanceCriteria": [
-        "Each session item shows the chapter title and subject if associated",
-        "Users can filter the session history list by selecting a specific chapter",
-        "Filter UI matches existing design patterns and color scheme",
-        "Unassociated sessions are clearly indicated"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/SessionHistoryItem.tsx",
-          "operation": "modify",
-          "description": "Add chapter display to session item showing chapter title and subject when chapterId is present, fetch chapter details using the chapters list from context or props, display unassociated sessions with a clear indicator like 'No chapter' or 'Unassociated'"
-        },
-        {
-          "path": "frontend/src/components/SessionHistory.tsx",
-          "operation": "modify",
-          "description": "Add chapter filter dropdown above the session list using useChapters hook to populate filter options, implement client-side filtering to show only sessions matching the selected chapter or all sessions when no filter is active, use existing card and select styling patterns"
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Ensure useSessions query returns session data including chapterId field for each session to support chapter display and filtering in the history view"
-        }
-      ]
-    },
-    {
-      "id": "REQ-14",
-      "summary": "Add chapter-level statistics to the statistics dashboard showing total study time and session count per chapter with visual breakdown",
-      "acceptanceCriteria": [
-        "Dashboard includes a new section for chapter statistics",
-        "Shows study time distribution across chapters using charts",
-        "Displays session count per chapter",
-        "Integrates with existing Recharts visualization patterns"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/StatisticsDashboard.tsx",
-          "operation": "modify",
-          "description": "Add a new chapter statistics section below existing metrics that calculates total study time and session count per chapter from sessions data grouped by chapterId, display results in a card matching existing design patterns with warm colors"
-        },
-        {
-          "path": "frontend/src/components/StudyChart.tsx",
-          "operation": "modify",
-          "description": "Add a new chart tab for chapter distribution showing a bar chart of study time per chapter and a pie or bar chart for session count per chapter using Recharts components consistent with existing chart styling and color palette"
-        }
-      ]
-    },
-    {
-      "id": "REQ-15",
-      "summary": "Implement edit and delete functionality for syllabus chapters with confirmation for deletion to prevent accidental data loss",
-      "acceptanceCriteria": [
-        "Users can edit chapter title, subject, and notes after creation",
-        "Delete action shows confirmation dialog",
-        "Deleting a chapter does not delete associated sessions but marks them as unassociated",
-        "Backend enforces ownership validation for edit and delete operations"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add useEditChapter mutation hook that calls editChapter backend method with chapterId, newTitle, newSubject, and newNotes parameters, add useDeleteChapter mutation hook that calls deleteChapter backend method, invalidate chapters and sessions queries after successful mutations"
+          "description": "Fix timer session recording by ensuring the backend actor is available and authenticated before attempting to save sessions. Add error handling for failed session saves and provide user feedback via toast notifications. Verify the session data structure matches the backend's expected format."
         },
         {
           "path": "frontend/src/components/ChapterManager.tsx",
           "operation": "modify",
-          "description": "Add edit button to each chapter card that opens an inline or modal edit form with fields for title, subject, and notes, add delete button that shows a confirmation dialog before calling useDeleteChapter mutation, display success/error toast notifications using existing patterns"
+          "description": "Fix chapter CRUD operations by adding proper error handling for all mutation operations (add, update, delete, toggle completion). Ensure optimistic updates are rolled back on failure. Add loading states to prevent duplicate submissions. Verify mutation callbacks properly invalidate queries to refresh the UI."
+        },
+        {
+          "path": "frontend/src/components/PomodoroTimer.tsx",
+          "operation": "modify",
+          "description": "Fix timer display and control issues by ensuring the timer state updates correctly during work/break cycles. Verify chapter selection integration works when authenticated. Add error boundaries around timer controls to prevent crashes from propagating to the entire app."
+        },
+        {
+          "path": "frontend/src/main.tsx",
+          "operation": "modify",
+          "description": "Verify the QueryClientProvider and InternetIdentityProvider are properly configured with correct initialization order. Ensure the QueryClient instance has appropriate default options for retry behavior and error handling. Add error boundary wrapper around the entire app to catch and display fatal errors."
+        }
+      ]
+    },
+    {
+      "id": "REQ-27",
+      "summary": "Ensure frontend builds successfully with proper imports and actor hook connectivity",
+      "acceptanceCriteria": [
+        "Frontend production build completes without errors",
+        "All imports resolve correctly",
+        "React Query client connects to backend actor",
+        "Internet Identity integration initializes properly"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useActor.ts",
+          "operation": "modify",
+          "description": "Verify all imports from @icp-sdk packages are correct and use the proper package names. Ensure the backend actor interface import path matches the generated declarations. Add TypeScript type guards to ensure type safety when accessing actor methods."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Verify all component imports resolve correctly. Check that all custom hooks are imported from their correct paths. Ensure there are no circular dependencies or missing exports that could cause build failures."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Verify the backend actor interface types match the actual backend methods. Ensure all query keys are unique and consistently formatted. Check that mutation functions properly handle the actor instance and call the correct backend methods with properly typed arguments."
+        },
+        {
+          "path": "frontend/src/main.tsx",
+          "operation": "modify",
+          "description": "Verify the React root rendering uses the correct React 18 API. Ensure all provider imports are correct and providers are properly nested. Check that the InternetIdentityProvider configuration matches the Internet Identity canister setup."
         }
       ]
     }

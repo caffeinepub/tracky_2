@@ -1,10 +1,12 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
+  "projectStateVersion": 15,
   "summary": "Study timer app with authentication and Pomodoro-style timer (25-min work, 5-min break)",
   "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
+  "known_issues": [
+    "User account creation not working - name and email signup flow failing in production"
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-implement-user-authentication-using-internet-identity-with-login-and-logout-functionality",
@@ -109,6 +111,78 @@
         "REQ-15"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-debug-and-fix-the-chapter-adding-functionality-issue-in-the-chaptermanager-component-to-ensure-chapters-can-be-successfully-created-and-saved-to-the-backend",
+      "title": "Debug and fix the chapter adding functionality issue in the ChapterManager component to ensure chapters can be successfully created and saved to the backend",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-ui-controls-in-the-chaptermanager-component-to-allow-users-to-mark-chapters-as-completed-or-incomplete-with-a-checkbox-or-toggle",
+      "title": "Add UI controls in the ChapterManager component to allow users to mark chapters as completed or incomplete with a checkbox or toggle",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-a-progress-report-showing-the-count-and-percentage-of-completed-chapters-versus-total-chapters-in-the-chaptermanager-component",
+      "title": "Display a progress report showing the count and percentage of completed chapters versus total chapters in the ChapterManager component",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-chapter-completion-statistics-to-the-statisticsdashboard-showing-completed-vs-incomplete-chapters-with-visual-breakdown",
+      "title": "Add chapter completion statistics to the StatisticsDashboard showing completed vs incomplete chapters with visual breakdown",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-investigate-why-the-chaptermanager-component-fails-to-add-new-chapters-to-the-backend-examining-the-mutation-call-in-usequeries-ts-the-backend-addchapter-function-in-main-mo-and-any-error-responses-or-validation-issues-preventing-successful-chapter-creation",
+      "title": "Investigate why the ChapterManager component fails to add new chapters to the backend, examining the mutation call in useQueries.ts, the backend addChapter function in main.mo, and any error responses or validation issues preventing successful chapter creation",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-identified-issue-preventing-chapter-creation-in-the-chaptermanager-component-ensuring-that-when-users-submit-the-add-chapter-form-with-title-and-subject-fields-the-chapter-is-successfully-saved-to-the-backend-and-appears-in-the-chapter-list",
+      "title": "Fix the identified issue preventing chapter creation in the ChapterManager component, ensuring that when users submit the add chapter form with title and subject fields, the chapter is successfully saved to the backend and appears in the chapter list",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-investigate-and-identify-why-the-application-is-not-working-in-the-deployed-environment-checking-for-runtime-errors-failed-network-requests-authentication-issues-or-broken-component-rendering-in-the-browser-console-and-network-tab",
+      "title": "Investigate and identify why the application is not working in the deployed environment, checking for runtime errors, failed network requests, authentication issues, or broken component rendering in the browser console and network tab",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-any-identified-issues-preventing-the-application-from-functioning-including-backend-canister-initialization-errors-frontend-build-configuration-problems-or-authentication-flow-breakages",
+      "title": "Fix any identified issues preventing the application from functioning, including backend canister initialization errors, frontend build configuration problems, or authentication flow breakages",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-frontend-builds-successfully-with-all-components-properly-imported-and-the-useactor-hook-correctly-connects-to-the-backend-canister",
+      "title": "Ensure the frontend builds successfully with all components properly imported and the useActor hook correctly connects to the backend canister",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -161,6 +235,42 @@
       "summary": "Add the ability to associate study sessions with specific syllabus chapters by storing a chapter reference in each session record",
       "reqIds": [
         "REQ-10"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Add progress tracking showing how many chapters are completed",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Add a completion status field to the chapter data model in the backend to track whether each chapter has been completed",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Add error handling and user feedback in the ChapterManager component to display specific error messages when chapter creation fails, helping users understand what went wrong",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "User account creation with name and email fields",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Verify that the backend main.mo actor compiles without errors and all public methods are accessible from the frontend",
+      "reqIds": [
+        "REQ-26"
       ],
       "status": "pending"
     }

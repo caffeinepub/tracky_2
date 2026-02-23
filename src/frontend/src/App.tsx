@@ -7,15 +7,31 @@ import { TimerSettings } from './components/TimerSettings';
 import { ChapterManager } from './components/ChapterManager';
 import { SessionHistory } from './components/SessionHistory';
 import { StatisticsDashboard } from './components/StatisticsDashboard';
-import { Loader2, Heart } from 'lucide-react';
+import { Loader2, Heart, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useActor } from './hooks/useActor';
+import { useEffect } from 'react';
 
 function App() {
   const { isAuthenticated, isLoading } = useAuth();
+  const { actor } = useActor();
+
+  // Log app state on mount and when it changes
+  useEffect(() => {
+    console.log('[App] State:', {
+      isAuthenticated,
+      isLoading,
+      hasActor: !!actor
+    });
+  }, [isAuthenticated, isLoading, actor]);
 
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
       </div>
     );
   }
@@ -33,6 +49,18 @@ function App() {
       </header>
 
       <main className="flex-1 p-4">
+        {!actor && !isLoading && (
+          <div className="container mx-auto max-w-6xl mb-6">
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Backend Not Available</AlertTitle>
+              <AlertDescription>
+                The backend is not responding. The application may have limited functionality. Check the browser console for more information.
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
+
         {isAuthenticated ? (
           <div className="container mx-auto max-w-6xl space-y-6">
             <DailyQuote />

@@ -2,11 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-a-frontend-component-for-managing-syllabus-chapters-that-displays-a-list-of-all-chapters-with-their-subjects-and-allows-users-to-add-new-chapters-with-title-and-subject-fields",
-      "featureTitle": "Create a frontend component for managing syllabus chapters that displays a list of all chapters with their subjects and allows users to add new chapters with title and subject fields",
+      "featureId": "feature-investigate-and-identify-why-the-application-is-not-working-in-the-deployed-environment-checking-for-runtime-errors-failed-network-requests-authentication-issues-or-broken-component-rendering-in-the-browser-console-and-network-tab",
+      "featureTitle": "Investigate and identify why the application is not working in the deployed environment, checking for runtime errors, failed network requests, authentication issues, or broken component rendering in the browser console and network tab",
       "files": [
         "frontend/src/App.tsx",
-        "frontend/src/components/ChapterManager.tsx",
+        "frontend/src/hooks/useAuth.ts",
         "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
@@ -17,73 +17,34 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-11"
+        "REQ-24"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-chapter-selection-functionality-to-the-pomodoro-timer-so-users-can-optionally-associate-their-current-study-session-with-a-specific-chapter-before-starting-the-timer",
-      "featureTitle": "Add chapter selection functionality to the Pomodoro timer so users can optionally associate their current study session with a specific chapter before starting the timer",
-      "files": [
-        "frontend/src/components/PomodoroTimer.tsx",
-        "frontend/src/hooks/usePomodoro.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-12"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-enhance-the-session-history-view-to-display-the-associated-chapter-name-for-each-study-session-with-the-ability-to-filter-sessions-by-chapter",
-      "featureTitle": "Enhance the session history view to display the associated chapter name for each study session, with the ability to filter sessions by chapter",
-      "files": [
-        "frontend/src/components/SessionHistory.tsx",
-        "frontend/src/components/SessionHistoryItem.tsx",
-        "frontend/src/hooks/useQueries.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-13"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-chapter-level-statistics-to-the-statistics-dashboard-showing-total-study-time-and-session-count-per-chapter-with-visual-breakdown",
-      "featureTitle": "Add chapter-level statistics to the statistics dashboard showing total study time and session count per chapter with visual breakdown",
-      "files": [
-        "frontend/src/components/StatisticsDashboard.tsx",
-        "frontend/src/components/StudyChart.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-14"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-edit-and-delete-functionality-for-syllabus-chapters-with-confirmation-for-deletion-to-prevent-accidental-data-loss",
-      "featureTitle": "Implement edit and delete functionality for syllabus chapters with confirmation for deletion to prevent accidental data loss",
+      "featureId": "feature-fix-any-identified-issues-preventing-the-application-from-functioning-including-backend-canister-initialization-errors-frontend-build-configuration-problems-or-authentication-flow-breakages",
+      "featureTitle": "Fix any identified issues preventing the application from functioning, including backend canister initialization errors, frontend build configuration problems, or authentication flow breakages",
       "files": [
         "frontend/src/components/ChapterManager.tsx",
+        "frontend/src/hooks/useAuth.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-25"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-the-frontend-builds-successfully-with-all-components-properly-imported-and-the-useactor-hook-correctly-connects-to-the-backend-canister",
+      "featureTitle": "Ensure the frontend builds successfully with all components properly imported and the useActor hook correctly connects to the backend canister",
+      "files": [
+        "frontend/src/App.tsx",
         "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
@@ -94,7 +55,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-15"
+        "REQ-27"
       ],
       "confidence": "high"
     }

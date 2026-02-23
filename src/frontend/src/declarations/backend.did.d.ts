@@ -10,48 +10,7 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface StudySession {
-  'startTime' : Time,
-  'endTime' : Time,
-  'completed' : boolean,
-  'chapterId' : [] | [string],
-}
-export interface SyllabusChapter {
-  'id' : string,
-  'title' : string,
-  'subject' : string,
-  'notes' : [] | [string],
-}
-export type Time = bigint;
-export interface UserSettings {
-  'workDuration' : bigint,
-  'breakDuration' : bigint,
-}
-export interface _SERVICE {
-  'createChapter' : ActorMethod<[string, string, [] | [string]], undefined>,
-  'deleteChapter' : ActorMethod<[string], undefined>,
-  'editChapter' : ActorMethod<
-    [string, string, string, [] | [string]],
-    undefined
-  >,
-  'endSession' : ActorMethod<[Time], undefined>,
-  'getChapters' : ActorMethod<[], Array<SyllabusChapter>>,
-  'getCurrentStreak' : ActorMethod<[], bigint>,
-  'getSessions' : ActorMethod<[], Array<StudySession>>,
-  'getSettings' : ActorMethod<[], UserSettings>,
-  'getStatistics' : ActorMethod<
-    [],
-    {
-      'weeklyTrends' : Array<[bigint, bigint]>,
-      'dailyStudyTime' : Array<[bigint, bigint]>,
-      'sessionDistribution' : Array<[bigint, bigint]>,
-    }
-  >,
-  'login' : ActorMethod<[], undefined>,
-  'logout' : ActorMethod<[], undefined>,
-  'startSession' : ActorMethod<[Time, [] | [string]], undefined>,
-  'updateSettings' : ActorMethod<[bigint, bigint], undefined>,
-}
+export interface _SERVICE {}
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];
 export declare const idlFactory: IDL.InterfaceFactory;

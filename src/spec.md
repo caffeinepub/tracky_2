@@ -1,14 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Add syllabus chapter tracker to organize study sessions by subject.
+**Goal:** Debug and fix the non-functional application deployment to restore all core functionality.
 
 **Planned changes:**
-- Create backend data model for syllabus chapters with title, subject, and optional notes fields
-- Associate study sessions with specific chapters by adding chapter reference to session records
-- Build frontend component for managing chapters with list view and add/edit/delete functionality
-- Add chapter selection dropdown to Pomodoro timer for associating sessions with chapters
-- Enhance session history view to display associated chapter names and filter by chapter
-- Add chapter-level statistics showing total study time and session count per chapter with visual breakdown
+- Investigate and resolve runtime errors, network request failures, and component rendering issues in the deployed environment
+- Fix backend canister initialization, frontend build configuration, and authentication flow problems
+- Verify backend actor compilation and method accessibility from frontend
+- Ensure frontend builds successfully with proper component imports and backend canister connection
 
-**User-visible outcome:** Users can create and manage syllabus chapters, associate study sessions with specific chapters during Pomodoro sessions, view which chapter each session was for in the history, and see study time statistics broken down by chapter.
+**User-visible outcome:** The application loads properly, users can log in with Internet Identity, and all core features (timer, authentication, chapter management) work correctly with data persisting between sessions.

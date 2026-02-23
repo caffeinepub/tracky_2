@@ -4,54 +4,42 @@ import Text "mo:core/Text";
 import Time "mo:core/Time";
 
 module {
-  // Old types
-  type OldStudySession = {
-    startTime : Time.Time;
-    endTime : Time.Time;
-    completed : Bool;
-  };
-
-  type OldActor = {
-    loggedInUsers : Map.Map<Principal, Bool>;
-    userSessions : Map.Map<Principal, [OldStudySession]>;
-    userSettings : Map.Map<Principal, { workDuration : Int; breakDuration : Int }>;
-    userStreaks : Map.Map<Principal, { currentStreak : Int; lastSessionDay : Int }>;
-  };
-
-  // New types
-  type NewStudySession = {
+  type StudySession = {
     startTime : Time.Time;
     endTime : Time.Time;
     completed : Bool;
     chapterId : ?Text;
   };
 
-  type NewActor = {
-    loggedInUsers : Map.Map<Principal, Bool>;
-    userSessions : Map.Map<Principal, [NewStudySession]>;
-    userSettings : Map.Map<Principal, { workDuration : Int; breakDuration : Int }>;
-    userStreaks : Map.Map<Principal, { currentStreak : Int; lastSessionDay : Int }>;
-    userChapters : Map.Map<Principal, Map.Map<Text, { id : Text; title : Text; subject : Text; notes : ?Text }>>;
+  type UserSettings = {
+    workDuration : Int;
+    breakDuration : Int;
   };
 
-  public func run(old : OldActor) : NewActor {
-    let newUserSessions = old.userSessions.map<Principal, [OldStudySession], [NewStudySession]>(
-      func(_p, oldSessions) {
-        oldSessions.map<OldStudySession, NewStudySession>(
-          func(oldSession) {
-            {
-              oldSession with
-              chapterId = null; // Initialize to null for existing sessions
-            };
-          }
-        );
-      }
-    );
+  type StreakData = {
+    currentStreak : Int;
+    lastSessionDay : Int;
+  };
 
-    {
-      old with
-      userSessions = newUserSessions;
-      userChapters = Map.empty<Principal, Map.Map<Text, { id : Text; title : Text; subject : Text; notes : ?Text }>>();
-    };
+  type SyllabusChapter = {
+    id : Text;
+    title : Text;
+    subject : Text;
+    notes : ?Text;
+    completed : Bool;
+  };
+
+  type OldActor = {
+    loggedInUsers : Map.Map<Principal, Bool>;
+    userSessions : Map.Map<Principal, [StudySession]>;
+    userSettings : Map.Map<Principal, UserSettings>;
+    userStreaks : Map.Map<Principal, StreakData>;
+    userChapters : Map.Map<Principal, Map.Map<Text, SyllabusChapter>>;
+  };
+
+  type NewActor = {};
+
+  public func run(_old : OldActor) : NewActor {
+    {};
   };
 };

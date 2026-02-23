@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import type { StudySession, SyllabusChapter } from '../backend';
+import type { StudySession, SyllabusChapter } from '../lib/types';
 import { Clock, BookOpen } from 'lucide-react';
 
 interface SessionHistoryItemProps {

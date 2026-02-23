@@ -1,156 +1,86 @@
 {
   "kind": "build_request",
-  "title": "Add syllabus chapter tracker to organize study sessions by subject",
-  "projectName": "Tracky",
-  "priority": "normal",
+  "title": "Debug and fix non-functional application deployment",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-9",
-      "text": "Create a backend data model for syllabus chapters that includes chapter title, subject/topic, and optional notes or description fields, storing chapters per user with unique identifiers",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-user-yes"
-        ],
-        "quotes": [
-          "syllabus chapter tracker to organize study sessions by subject"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Chapter data structure includes id, userId, title, subject, and optional notes fields",
-        "Backend provides functions to create, read, update, and delete chapters",
-        "Chapters are persisted in stable storage and survive canister upgrades",
-        "Each user can only access their own chapters"
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "text": "Add the ability to associate study sessions with specific syllabus chapters by storing a chapter reference in each session record",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-user-yes"
-        ],
-        "quotes": [
-          "organize study sessions by subject"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Study session records include an optional chapterId field",
-        "Backend validates that referenced chapters exist and belong to the user",
-        "Session history queries can filter by chapter",
-        "Statistics can be computed per chapter"
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "text": "Create a frontend component for managing syllabus chapters that displays a list of all chapters with their subjects and allows users to add new chapters with title and subject fields",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-user-yes"
-        ],
-        "quotes": [
-          "syllabus chapter tracker"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Component displays all user chapters in a card-based layout consistent with existing UI design",
-        "Add chapter form includes title and subject input fields with validation",
-        "Users can create new chapters and see them appear in the list immediately",
-        "Component uses warm earthy color palette matching existing theme"
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "text": "Add chapter selection functionality to the Pomodoro timer so users can optionally associate their current study session with a specific chapter before starting the timer",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-user-yes"
-        ],
-        "quotes": [
-          "organize study sessions by subject"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Timer component includes a chapter selector dropdown or similar UI element",
-        "Users can choose a chapter or leave it unassociated",
-        "Selected chapter is passed to backend when starting a study session",
-        "Chapter selection is cleared after session completion"
-      ]
-    },
-    {
-      "id": "REQ-13",
-      "text": "Enhance the session history view to display the associated chapter name for each study session, with the ability to filter sessions by chapter",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-user-yes"
-        ],
-        "quotes": [
-          "organize study sessions by subject"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Each session item shows the chapter title and subject if associated",
-        "Users can filter the session history list by selecting a specific chapter",
-        "Filter UI matches existing design patterns and color scheme",
-        "Unassociated sessions are clearly indicated"
-      ]
-    },
-    {
-      "id": "REQ-14",
-      "text": "Add chapter-level statistics to the statistics dashboard showing total study time and session count per chapter with visual breakdown",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-user-yes"
-        ],
-        "quotes": [
-          "organize study sessions by subject"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Dashboard includes a new section for chapter statistics",
-        "Shows study time distribution across chapters using charts",
-        "Displays session count per chapter",
-        "Integrates with existing Recharts visualization patterns"
-      ]
-    },
-    {
-      "id": "REQ-15",
-      "text": "Implement edit and delete functionality for syllabus chapters with confirmation for deletion to prevent accidental data loss",
+      "id": "REQ-24",
+      "text": "Investigate and identify why the application is not working in the deployed environment, checking for runtime errors, failed network requests, authentication issues, or broken component rendering in the browser console and network tab",
       "target": "both",
       "source": {
         "messageIds": [
-          "msg-user-yes"
+          "msg-user-not-working"
         ],
         "quotes": [
-          "syllabus chapter tracker to organize study sessions by subject"
+          "Not working anything"
         ]
       },
       "acceptanceCriteria": [
-        "Users can edit chapter title, subject, and notes after creation",
-        "Delete action shows confirmation dialog",
-        "Deleting a chapter does not delete associated sessions but marks them as unassociated",
-        "Backend enforces ownership validation for edit and delete operations"
+        "Browser console shows no critical JavaScript errors",
+        "Network tab shows successful responses from backend canister",
+        "Application loads and displays the main interface without blank screens or crashes"
+      ]
+    },
+    {
+      "id": "REQ-25",
+      "text": "Fix any identified issues preventing the application from functioning, including backend canister initialization errors, frontend build configuration problems, or authentication flow breakages",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-user-not-working"
+        ],
+        "quotes": [
+          "Not working anything"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All core features (timer, authentication, chapter management) are operational",
+        "Users can successfully log in using Internet Identity",
+        "Data persistence works correctly between sessions",
+        "UI components render properly with the warm earthy theme"
+      ]
+    },
+    {
+      "id": "REQ-26",
+      "text": "Verify that the backend main.mo actor compiles without errors and all public methods are accessible from the frontend",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-user-not-working"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend canister deploys successfully without compilation errors",
+        "All actor methods respond to frontend requests",
+        "Persistent storage (Maps) initializes correctly"
+      ]
+    },
+    {
+      "id": "REQ-27",
+      "text": "Ensure the frontend builds successfully with all components properly imported and the useActor hook correctly connects to the backend canister",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-not-working"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Frontend production build completes without errors",
+        "All imports resolve correctly",
+        "React Query client connects to backend actor",
+        "Internet Identity integration initializes properly"
       ]
     }
   ],
   "constraints": [
+    "Do not modify frontend/src/hooks/useInternetIdentity.ts",
     "Maintain single-actor architecture in backend/main.mo",
-    "Use existing warm earthy color palette (terracotta, sage green, cream) for all new UI components",
-    "Follow existing card-based layout patterns",
-    "Do not modify immutable frontend paths: useInternetIdentity.ts, useInternetIdentity.tsx, useActor.ts, main.tsx, components/ui",
-    "New backend state must support stable storage for canister upgrades"
+    "Preserve existing data structures and persistent storage Maps"
   ],
   "nonGoals": [
-    "Multi-subject filtering (only single chapter filter needed)",
-    "Chapter ordering or reordering functionality",
-    "Chapter sharing or collaboration features",
-    "Import/export of syllabus data",
-    "Nested chapter hierarchies or sub-chapters"
+    "Adding new features while debugging",
+    "Redesigning the UI or changing the visual theme",
+    "Modifying the Pomodoro timer logic"
   ],
   "imageRequirements": {
     "required": [],
