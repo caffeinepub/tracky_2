@@ -1,110 +1,58 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Debug and fix non-functional application deployment",
+  "title": "Fix unresponsive account creation button",
   "requirements": [
     {
-      "id": "REQ-24",
-      "summary": "Investigate and identify deployment issues by checking runtime errors, network requests, and component rendering",
+      "id": "REQ-28",
+      "summary": "Investigate and identify why the account creation button does not respond when clicked",
       "acceptanceCriteria": [
-        "Browser console shows no critical JavaScript errors",
-        "Network tab shows successful responses from backend canister",
-        "Application loads and displays the main interface without blank screens or crashes"
+        "Identify the specific cause of the unresponsive button behavior",
+        "Document any console errors or warnings related to the button click",
+        "Verify that the button's onClick handler is properly attached"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useActor.ts",
-          "operation": "modify",
-          "description": "Add comprehensive error logging to the useActor hook to capture backend actor initialization failures, authentication state transitions, and network connectivity issues. Include console error messages with detailed context about which stage of actor creation failed (anonymous vs authenticated) and any rejection reasons from the backend canister."
-        },
-        {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Wrap the main application component tree with error boundaries and add defensive null checks for all hook return values (useAuth, useDailyQuote, useStreak, useSettings). Add loading states and error display UI for each major section to prevent blank screens when backend queries fail. Include console logging at component mount to verify rendering pipeline."
+          "description": "Add comprehensive console logging and error boundaries around the account creation form to capture any JavaScript errors, validation failures, or event handler issues that may be preventing the button from responding"
         },
         {
           "path": "frontend/src/hooks/useAuth.ts",
           "operation": "modify",
-          "description": "Add detailed error logging throughout the authentication flow to capture Internet Identity login failures, backend actor initialization errors during auth state changes, and query invalidation issues. Log the authentication state transitions and any exceptions thrown during login/logout operations."
+          "description": "Add detailed logging to the login mutation to track when the mutation is called, its parameters, and any errors or state changes during the authentication process"
         },
         {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/src/hooks/useInternetIdentity.ts",
           "operation": "modify",
-          "description": "Add error handling and logging to all React Query hooks to capture backend method call failures. Include retry configuration and error state exposure for each query (streak, sessions, settings, chapters, statistics). Log the specific backend method being called and any error responses to help identify which backend capabilities are failing."
+          "description": "Enhance error logging in the login function to capture AuthClient initialization failures, identity delegation errors, or any blocking conditions during the Internet Identity authentication flow"
         }
       ]
     },
     {
-      "id": "REQ-25",
-      "summary": "Fix identified issues preventing core features from functioning including authentication, timer, and data persistence",
+      "id": "REQ-29",
+      "summary": "Fix the account creation button to execute signup process with proper user feedback",
       "acceptanceCriteria": [
-        "All core features (timer, authentication, chapter management) are operational",
-        "Users can successfully log in using Internet Identity",
-        "Data persistence works correctly between sessions",
-        "UI components render properly with the warm earthy theme"
+        "Clicking the account creation button triggers the signup flow",
+        "Button shows a loading state while processing the request",
+        "Users receive clear feedback on success or failure of account creation",
+        "Form validation prevents submission with empty or invalid fields"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useActor.ts",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Fix any actor initialization race conditions by ensuring the backend actor is properly created before queries attempt to use it. Add null checks and loading states. Verify the actor creation logic handles both authenticated and anonymous states correctly, and ensure the canisterId is properly resolved from environment variables or declarations."
+          "description": "Fix the account creation form by ensuring the submit button's onClick handler properly calls the login mutation, add form validation for name and email fields, implement loading state display during authentication, and add success/error toast notifications for user feedback"
         },
         {
           "path": "frontend/src/hooks/useAuth.ts",
           "operation": "modify",
-          "description": "Fix authentication flow issues by ensuring backend actor methods are called only after successful Internet Identity authentication. Add proper error handling for backend registration/login failures. Ensure query invalidation happens after authentication state changes to trigger data refetch with the new authenticated actor."
+          "description": "Ensure the login mutation properly handles the authentication flow, returns appropriate loading states, and provides clear error messages that can be displayed to users in the UI"
         },
         {
-          "path": "frontend/src/hooks/usePomodoro.ts",
+          "path": "frontend/src/components/AuthButton.tsx",
           "operation": "modify",
-          "description": "Fix timer session recording by ensuring the backend actor is available and authenticated before attempting to save sessions. Add error handling for failed session saves and provide user feedback via toast notifications. Verify the session data structure matches the backend's expected format."
-        },
-        {
-          "path": "frontend/src/components/ChapterManager.tsx",
-          "operation": "modify",
-          "description": "Fix chapter CRUD operations by adding proper error handling for all mutation operations (add, update, delete, toggle completion). Ensure optimistic updates are rolled back on failure. Add loading states to prevent duplicate submissions. Verify mutation callbacks properly invalidate queries to refresh the UI."
-        },
-        {
-          "path": "frontend/src/components/PomodoroTimer.tsx",
-          "operation": "modify",
-          "description": "Fix timer display and control issues by ensuring the timer state updates correctly during work/break cycles. Verify chapter selection integration works when authenticated. Add error boundaries around timer controls to prevent crashes from propagating to the entire app."
-        },
-        {
-          "path": "frontend/src/main.tsx",
-          "operation": "modify",
-          "description": "Verify the QueryClientProvider and InternetIdentityProvider are properly configured with correct initialization order. Ensure the QueryClient instance has appropriate default options for retry behavior and error handling. Add error boundary wrapper around the entire app to catch and display fatal errors."
-        }
-      ]
-    },
-    {
-      "id": "REQ-27",
-      "summary": "Ensure frontend builds successfully with proper imports and actor hook connectivity",
-      "acceptanceCriteria": [
-        "Frontend production build completes without errors",
-        "All imports resolve correctly",
-        "React Query client connects to backend actor",
-        "Internet Identity integration initializes properly"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useActor.ts",
-          "operation": "modify",
-          "description": "Verify all imports from @icp-sdk packages are correct and use the proper package names. Ensure the backend actor interface import path matches the generated declarations. Add TypeScript type guards to ensure type safety when accessing actor methods."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Verify all component imports resolve correctly. Check that all custom hooks are imported from their correct paths. Ensure there are no circular dependencies or missing exports that could cause build failures."
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Verify the backend actor interface types match the actual backend methods. Ensure all query keys are unique and consistently formatted. Check that mutation functions properly handle the actor instance and call the correct backend methods with properly typed arguments."
-        },
-        {
-          "path": "frontend/src/main.tsx",
-          "operation": "modify",
-          "description": "Verify the React root rendering uses the correct React 18 API. Ensure all provider imports are correct and providers are properly nested. Check that the InternetIdentityProvider configuration matches the Internet Identity canister setup."
+          "description": "Update the AuthButton component to properly display loading states using the Loader2 icon and disable the button during authentication to prevent multiple submissions"
         }
       ]
     }

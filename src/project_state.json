@@ -1,10 +1,11 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 15,
+  "projectStateVersion": 17,
   "summary": "Study timer app with authentication and Pomodoro-style timer (25-min work, 5-min break)",
   "architectural_notes": [],
   "known_issues": [
-    "User account creation not working - name and email signup flow failing in production"
+    "User account creation not working - name and email signup flow failing in production",
+    "Account creation button click does nothing - no response when users click the signup button"
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -181,6 +182,22 @@
       "title": "Ensure the frontend builds successfully with all components properly imported and the useActor hook correctly connects to the backend canister",
       "reqIds": [
         "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-investigate-and-identify-why-the-account-creation-button-in-the-frontend-does-not-respond-when-clicked-checking-for-event-handler-attachment-form-validation-errors-missing-mutation-calls-console-errors-and-any-blocking-conditions-preventing-the-button-s-onclick-handler-from-executing",
+      "title": "Investigate and identify why the account creation button in the frontend does not respond when clicked, checking for event handler attachment, form validation errors, missing mutation calls, console errors, and any blocking conditions preventing the button's onClick handler from executing",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-identified-issue-causing-the-account-creation-button-to-be-unresponsive-ensuring-that-when-users-click-the-button-after-entering-name-and-email-the-signup-process-executes-and-provides-appropriate-user-feedback-loading-state-success-message-or-error-message",
+      "title": "Fix the identified issue causing the account creation button to be unresponsive, ensuring that when users click the button after entering name and email, the signup process executes and provides appropriate user feedback (loading state, success message, or error message)",
+      "reqIds": [
+        "REQ-29"
       ],
       "version": 1
     }

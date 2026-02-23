@@ -1,86 +1,55 @@
 {
   "kind": "build_request",
-  "title": "Debug and fix non-functional application deployment",
+  "title": "Fix unresponsive account creation button",
+  "projectName": "Tracky",
   "priority": "high",
   "requirements": [
     {
-      "id": "REQ-24",
-      "text": "Investigate and identify why the application is not working in the deployed environment, checking for runtime errors, failed network requests, authentication issues, or broken component rendering in the browser console and network tab",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-user-not-working"
-        ],
-        "quotes": [
-          "Not working anything"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Browser console shows no critical JavaScript errors",
-        "Network tab shows successful responses from backend canister",
-        "Application loads and displays the main interface without blank screens or crashes"
-      ]
-    },
-    {
-      "id": "REQ-25",
-      "text": "Fix any identified issues preventing the application from functioning, including backend canister initialization errors, frontend build configuration problems, or authentication flow breakages",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-user-not-working"
-        ],
-        "quotes": [
-          "Not working anything"
-        ]
-      },
-      "acceptanceCriteria": [
-        "All core features (timer, authentication, chapter management) are operational",
-        "Users can successfully log in using Internet Identity",
-        "Data persistence works correctly between sessions",
-        "UI components render properly with the warm earthy theme"
-      ]
-    },
-    {
-      "id": "REQ-26",
-      "text": "Verify that the backend main.mo actor compiles without errors and all public methods are accessible from the frontend",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-user-not-working"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend canister deploys successfully without compilation errors",
-        "All actor methods respond to frontend requests",
-        "Persistent storage (Maps) initializes correctly"
-      ]
-    },
-    {
-      "id": "REQ-27",
-      "text": "Ensure the frontend builds successfully with all components properly imported and the useActor hook correctly connects to the backend canister",
+      "id": "REQ-28",
+      "text": "Investigate and identify why the account creation button in the frontend does not respond when clicked, checking for event handler attachment, form validation errors, missing mutation calls, console errors, and any blocking conditions preventing the button's onClick handler from executing",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-not-working"
+          "msg-last"
+        ],
+        "quotes": [
+          "Does nothing happen when I click the Buttton yes not working"
         ]
       },
       "acceptanceCriteria": [
-        "Frontend production build completes without errors",
-        "All imports resolve correctly",
-        "React Query client connects to backend actor",
-        "Internet Identity integration initializes properly"
+        "Identify the specific cause of the unresponsive button behavior",
+        "Document any console errors or warnings related to the button click",
+        "Verify that the button's onClick handler is properly attached"
+      ]
+    },
+    {
+      "id": "REQ-29",
+      "text": "Fix the identified issue causing the account creation button to be unresponsive, ensuring that when users click the button after entering name and email, the signup process executes and provides appropriate user feedback (loading state, success message, or error message)",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-last"
+        ],
+        "quotes": [
+          "Does nothing happen when I click the Buttton yes not working"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Clicking the account creation button triggers the signup flow",
+        "Button shows a loading state while processing the request",
+        "Users receive clear feedback on success or failure of account creation",
+        "Form validation prevents submission with empty or invalid fields"
       ]
     }
   ],
   "constraints": [
-    "Do not modify frontend/src/hooks/useInternetIdentity.ts",
-    "Maintain single-actor architecture in backend/main.mo",
-    "Preserve existing data structures and persistent storage Maps"
+    "Maintain existing authentication flow using Internet Identity",
+    "Preserve the current UI theme and styling patterns"
   ],
   "nonGoals": [
-    "Adding new features while debugging",
-    "Redesigning the UI or changing the visual theme",
-    "Modifying the Pomodoro timer logic"
+    "Redesigning the entire authentication system",
+    "Adding additional fields beyond name and email",
+    "Implementing alternative authentication methods"
   ],
   "imageRequirements": {
     "required": [],

@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Debug and fix the non-functional application deployment to restore all core functionality.
+**Goal:** Fix the unresponsive account creation button so users can successfully create accounts.
 
 **Planned changes:**
-- Investigate and resolve runtime errors, network request failures, and component rendering issues in the deployed environment
-- Fix backend canister initialization, frontend build configuration, and authentication flow problems
-- Verify backend actor compilation and method accessibility from frontend
-- Ensure frontend builds successfully with proper component imports and backend canister connection
+- Investigate why the account creation button does not respond when clicked
+- Fix the identified issue preventing the button's onClick handler from executing
+- Ensure proper form validation and user feedback (loading states, success/error messages)
 
-**User-visible outcome:** The application loads properly, users can log in with Internet Identity, and all core features (timer, authentication, chapter management) work correctly with data persisting between sessions.
+**User-visible outcome:** Users can click the account creation button after entering their name and email, see a loading state while processing, and receive clear feedback on whether their account was created successfully.

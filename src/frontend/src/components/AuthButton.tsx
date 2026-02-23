@@ -5,6 +5,8 @@ import { LogIn, LogOut, Loader2 } from 'lucide-react';
 export function AuthButton() {
   const { isAuthenticated, login, logout, isLoggingIn, isLoggingOut } = useAuth();
 
+  console.log('[AuthButton] Render state:', { isAuthenticated, isLoggingIn, isLoggingOut });
+
   if (isLoggingIn || isLoggingOut) {
     return (
       <Button disabled variant="outline" size="default">
@@ -24,7 +26,13 @@ export function AuthButton() {
   }
 
   return (
-    <Button onClick={login} size="default">
+    <Button 
+      onClick={() => {
+        console.log('[AuthButton] Login button clicked');
+        login();
+      }} 
+      size="default"
+    >
       <LogIn className="h-4 w-4 mr-2" />
       Login
     </Button>

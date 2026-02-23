@@ -47,6 +47,8 @@ export function useAuth() {
     onError: (error: Error) => {
       console.error('[useAuth] Login error:', error);
       toast.error(error.message || 'Login failed. Please try again.');
+      // Clear the Internet Identity session on backend login failure
+      iiClear();
     },
   });
 
@@ -95,22 +97,46 @@ export function useAuth() {
   const handleLogin = async () => {
     try {
       console.log('[useAuth] Starting Internet Identity login');
+      
+      // Show a loading toast
+      const loadingToast = toast.loading('Connecting to Internet Identity...');
+      
       await iiLogin();
       
       // Wait for identity to be set
+      let attempts = 0;
+      const maxAttempts = 300; // 30 seconds
+      
       const checkIdentity = setInterval(async () => {
+        attempts++;
+        
+        if (attempts > maxAttempts) {
+          clearInterval(checkIdentity);
+          toast.dismiss(loadingToast);
+          toast.error('Login timeout. Please try again.');
+          console.error('[useAuth] Login timeout after 30 seconds');
+          iiClear();
+          return;
+        }
+        
         if (loginStatus === 'success' && identity && actor) {
           console.log('[useAuth] Identity ready, calling backend login');
           clearInterval(checkIdentity);
-          await loginMutation.mutateAsync();
+          toast.dismiss(loadingToast);
+          
+          try {
+            await loginMutation.mutateAsync();
+          } catch (error) {
+            console.error('[useAuth] Backend login mutation failed:', error);
+            // Error toast is already shown by mutation onError
+          }
+        } else if (loginStatus === 'loginError') {
+          clearInterval(checkIdentity);
+          toast.dismiss(loadingToast);
+          toast.error('Internet Identity login failed. Please try again.');
+          console.error('[useAuth] Internet Identity login failed');
         }
       }, 100);
-
-      // Clear interval after 30 seconds to prevent memory leak
-      setTimeout(() => {
-        clearInterval(checkIdentity);
-        console.log('[useAuth] Login timeout cleared');
-      }, 30000);
     } catch (error) {
       console.error('[useAuth] Internet Identity login error:', error);
       toast.error('Login failed. Please try again.');

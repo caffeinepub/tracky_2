@@ -1,90 +1,52 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T22:39:57.540Z",
+  "generatedAt": "2026-02-23T22:46:53.423Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 3,
+    "total": 2,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-24",
-        "summary": "Investigate and identify why the application is not working in the deployed environment, checking for runtime errors, failed network requests, authentication issues, or broken component rendering in the browser console and network tab",
+        "id": "REQ-28",
+        "summary": "Investigate and identify why the account creation button in the frontend does not respond when clicked, checking for event handler attachment, form validation errors, missing mutation calls, console errors, and any blocking conditions preventing the button's onClick handler from executing",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useActor.ts",
           "frontend/src/App.tsx",
           "frontend/src/hooks/useAuth.ts",
-          "frontend/src/hooks/useQueries.ts"
+          "frontend/src/hooks/useInternetIdentity.ts"
         ],
         "matchedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/hooks/useAuth.ts",
-          "frontend/src/hooks/useQueries.ts"
+          "frontend/src/hooks/useAuth.ts"
         ]
       },
       {
-        "id": "REQ-25",
-        "summary": "Fix any identified issues preventing the application from functioning, including backend canister initialization errors, frontend build configuration problems, or authentication flow breakages",
+        "id": "REQ-29",
+        "summary": "Fix the identified issue causing the account creation button to be unresponsive, ensuring that when users click the button after entering name and email, the signup process executes and provides appropriate user feedback (loading state, success message, or error message)",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useActor.ts",
+          "frontend/src/App.tsx",
           "frontend/src/hooks/useAuth.ts",
-          "frontend/src/hooks/usePomodoro.ts",
-          "frontend/src/components/ChapterManager.tsx",
-          "frontend/src/components/PomodoroTimer.tsx",
-          "frontend/src/main.tsx"
+          "frontend/src/components/AuthButton.tsx"
         ],
         "matchedFiles": [
           "frontend/src/hooks/useAuth.ts",
-          "frontend/src/components/ChapterManager.tsx"
-        ]
-      },
-      {
-        "id": "REQ-26",
-        "summary": "Verify that the backend main.mo actor compiles without errors and all public methods are accessible from the frontend",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-27",
-        "summary": "Ensure the frontend builds successfully with all components properly imported and the useActor hook correctly connects to the backend canister",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useActor.ts",
-          "frontend/src/App.tsx",
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/main.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/hooks/useQueries.ts"
+          "frontend/src/components/AuthButton.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/ChapterManager.tsx",
-    "frontend/src/components/SessionHistoryItem.tsx",
-    "frontend/src/components/StudyChart.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
+    "frontend/src/components/AuthButton.tsx",
     "frontend/src/hooks/useAuth.ts",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/lib/types.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",
