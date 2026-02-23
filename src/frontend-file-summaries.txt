@@ -1,0 +1,20 @@
+{
+  "frontend/src/App.tsx": "Main application with authenticated layout featuring daily quote, timer with streak display, session history, statistics dashboard, and settings access.",
+  "frontend/src/components/AuthButton.tsx": "Authentication button component that handles login/logout with loading states and appropriate icons.",
+  "frontend/src/components/PomodoroTimer.tsx": "Updated timer component displaying custom work and break durations from user settings.",
+  "frontend/src/hooks/useAuth.ts": "Custom hook managing authentication state by integrating Internet Identity with backend login/logout methods, using identity presence and login status to determine authentication state without requiring an isLoggedIn query.",
+  "frontend/src/hooks/usePomodoro.ts": "Enhanced Pomodoro timer hook integrating custom settings from backend and recording session start/end times with automatic streak updates.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations including streak tracking, session history, timer settings, session recording, and statistics with proper invalidation.",
+  "frontend/src/index.css": "Global styles with warm earthy OKLCH color palette (terracotta, sage, cream) for both light and dark modes, plus typography hierarchy.",
+  "frontend/tailwind.config.js": "Tailwind configuration with Inter font family, warm earthy color tokens, custom shadows, and extended border radius values.",
+  "frontend/src/main.tsx": "Application entry point with QueryClient, InternetIdentityProvider, and Sonner toast notifications configured.",
+  "frontend/src/data/motivationalQuotes.ts": "Array of 33 study-focused motivational quotes with author attributions for daily rotation.",
+  "frontend/src/hooks/useDailyQuote.ts": "Hook that deterministically selects one quote per day based on date, ensuring consistency throughout the day.",
+  "frontend/src/components/DailyQuote.tsx": "Card component displaying the daily motivational quote with quote icon and author attribution in warm earthy styling.",
+  "frontend/src/components/StreakDisplay.tsx": "Card component showing current study streak with flame icon, loading and error states.",
+  "frontend/src/components/TimerSettings.tsx": "Collapsible settings form for customizing work and break durations with validation (1-90 minutes).",
+  "frontend/src/components/SessionHistory.tsx": "Card component displaying completed study sessions in reverse chronological order with total time and session count statistics.",
+  "frontend/src/components/SessionHistoryItem.tsx": "Individual session list item showing date, time range, and duration with formatted display.",
+  "frontend/src/components/StatisticsDashboard.tsx": "Dashboard card displaying study statistics including total time, average session length, and session count with chart integration.",
+  "frontend/src/components/StudyChart.tsx": "Interactive chart component using recharts with tabs for study time trends and session distribution, supporting daily/weekly views."
+}

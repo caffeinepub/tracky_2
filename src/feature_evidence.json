@@ -1,0 +1,107 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-implement-study-streak-tracking-that-counts-consecutive-days-with-at-least-one-completed-study-session-storing-streak-data-per-user-in-the-backend-and-displaying-current-streak-count-in-the-ui",
+      "featureTitle": "Implement study streak tracking that counts consecutive days with at least one completed study session, storing streak data per user in the backend and displaying current streak count in the UI",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/StreakDisplay.tsx",
+        "frontend/src/hooks/usePomodoro.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-session-history-feature-that-records-all-completed-study-sessions-with-timestamps-and-durations-storing-them-in-the-backend-and-displaying-them-in-a-chronological-list-in-the-frontend",
+      "featureTitle": "Create session history feature that records all completed study sessions with timestamps and durations, storing them in the backend and displaying them in a chronological list in the frontend",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/SessionHistory.tsx",
+        "frontend/src/components/SessionHistoryItem.tsx",
+        "frontend/src/hooks/usePomodoro.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-custom-timer-settings-that-allow-users-to-adjust-work-session-and-break-durations-storing-preferences-per-user-in-the-backend-and-providing-a-settings-ui-in-the-frontend",
+      "featureTitle": "Add custom timer settings that allow users to adjust work session and break durations, storing preferences per user in the backend and providing a settings UI in the frontend",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/TimerSettings.tsx",
+        "frontend/src/hooks/usePomodoro.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-display-daily-motivational-quotes-that-rotate-and-appear-in-the-ui-with-a-curated-collection-of-study-focused-inspirational-messages",
+      "featureTitle": "Display daily motivational quotes that rotate and appear in the UI, with a curated collection of study-focused inspirational messages",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/DailyQuote.tsx",
+        "frontend/src/data/motivationalQuotes.ts",
+        "frontend/src/hooks/useDailyQuote.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-study-statistics-dashboard-with-charts-visualizing-study-patterns-including-daily-study-time-weekly-trends-and-session-distribution-over-time-periods",
+      "featureTitle": "Create a study statistics dashboard with charts visualizing study patterns including daily study time, weekly trends, and session distribution over time periods",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/StatisticsDashboard.tsx",
+        "frontend/src/components/StudyChart.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 5,
+  "summary": "Study timer app with authentication and Pomodoro-style timer (25-min work, 5-min break)",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-implement-user-authentication-using-internet-identity-with-login-and-logout-functionality",
+      "title": "Implement user authentication using Internet Identity with login and logout functionality",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-pomodoro-style-timer-with-25-minute-work-sessions-and-5-minute-break-intervals",
+      "title": "Create a Pomodoro-style timer with 25-minute work sessions and 5-minute break intervals",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-a-clean-minimal-user-interface-with-a-cohesive-visual-theme-featuring-warm-earthy-tones-terracotta-sage-green-cream-with-modern-sans-serif-typography-and-card-based-layouts-with-subtle-shadows",
+      "title": "Design a clean, minimal user interface with a cohesive visual theme featuring warm earthy tones (terracotta, sage green, cream) with modern sans-serif typography and card-based layouts with subtle shadows",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-study-streak-tracking-that-counts-consecutive-days-with-at-least-one-completed-study-session-storing-streak-data-per-user-in-the-backend-and-displaying-current-streak-count-in-the-ui",
+      "title": "Implement study streak tracking that counts consecutive days with at least one completed study session, storing streak data per user in the backend and displaying current streak count in the UI",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-session-history-feature-that-records-all-completed-study-sessions-with-timestamps-and-durations-storing-them-in-the-backend-and-displaying-them-in-a-chronological-list-in-the-frontend",
+      "title": "Create session history feature that records all completed study sessions with timestamps and durations, storing them in the backend and displaying them in a chronological list in the frontend",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-custom-timer-settings-that-allow-users-to-adjust-work-session-and-break-durations-storing-preferences-per-user-in-the-backend-and-providing-a-settings-ui-in-the-frontend",
+      "title": "Add custom timer settings that allow users to adjust work session and break durations, storing preferences per user in the backend and providing a settings UI in the frontend",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-daily-motivational-quotes-that-rotate-and-appear-in-the-ui-with-a-curated-collection-of-study-focused-inspirational-messages",
+      "title": "Display daily motivational quotes that rotate and appear in the UI, with a curated collection of study-focused inspirational messages",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-study-statistics-dashboard-with-charts-visualizing-study-patterns-including-daily-study-time-weekly-trends-and-session-distribution-over-time-periods",
+      "title": "Create a study statistics dashboard with charts visualizing study patterns including daily study time, weekly trends, and session distribution over time periods",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-4",
+      "summary": "Study streak tracking (consecutive days of study sessions)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Session history (view past study sessions and total time studied)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Custom timer settings (adjustable work/break durations)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Daily motivational quotes display",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Study statistics dashboard with charts showing study patterns",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Tracky",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
